@@ -7,6 +7,7 @@
 typedef struct {
     Hand hand;
     Card hidden_card;
+    bool is_showing_hidden;
 } Dealer;
 
 #endif
