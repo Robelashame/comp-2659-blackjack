@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "hand.h"
+#include "deck.h"
 
 typedef struct {
     int bank;
@@ -10,5 +11,8 @@ typedef struct {
     bool active_turn;
 } Player;
 
+void hit(Player *player, Deck *shoe);
+
+void stand(Player *player);
 
 #endif

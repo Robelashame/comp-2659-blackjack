@@ -1,5 +1,6 @@
 #ifndef HAND_H
 #define HAND_H
+#include <stdbool.h>
 
 #include "card.h"
 

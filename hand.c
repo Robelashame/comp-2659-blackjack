@@ -1,5 +1,4 @@
 #include "hand.h"
-#include <stdbool.h>
 
 int calculate_hand_value(Hand *hand) {
     int value = 0;
