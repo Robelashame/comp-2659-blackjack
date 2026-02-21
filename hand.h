@@ -14,6 +14,8 @@ typedef struct {
 
 void add_card(Hand *hand, Card *card);
 
+void remove_cards(Hand *hand);
+
 int calculate_hand_value(Hand *hand);
 
 bool is_blackjack(Hand *hand);

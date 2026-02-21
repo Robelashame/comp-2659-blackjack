@@ -9,3 +9,8 @@ void hit(Player *player, Deck *shoe) {
 void stand(Player *player) {
     player->active_turn = false;
 }
+
+void bet_on_hand(Player *player, int bet_amount) {
+    player->bank -= bet_amount;
+    player->total_bet += bet_amount;
+}

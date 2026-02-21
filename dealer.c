@@ -11,3 +11,7 @@ void dealer_play(Dealer *dealer, Deck *shoe) {
         add_card(&dealer->hand, &dealt_card);
     }
 }
+
+void add_hidden_card(Dealer *dealer, Card *card) {
+    dealer->hidden_card = (*card);
+}

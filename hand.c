@@ -31,3 +31,12 @@ bool is_bust(Hand *hand) {
     else 
         return false;
 }
+
+void remove_cards(Hand *hand) {
+    for (int i = 0; i < hand->num_of_cards; i++) {
+        hand->cards[i] = (Card){0};
+    }
+    hand->num_of_cards = 0;
+    hand->bet_amount = 0;
+    hand->value = 0;
+}

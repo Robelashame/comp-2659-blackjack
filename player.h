@@ -15,4 +15,6 @@ void hit(Player *player, Deck *shoe);
 
 void stand(Player *player);
 
+void bet_on_hand(Player *player, int bet_amount);
+
 #endif
