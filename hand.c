@@ -15,7 +15,7 @@ void add_card(Hand *hand, Card *card) {
     }
     hand->cards[index] = (*card);
     hand->num_of_cards++;
-    hand->value = calculate_hand_value(&hand);
+    hand->value = calculate_hand_value(hand);
 }
 
 bool is_blackjack(Hand *hand) {

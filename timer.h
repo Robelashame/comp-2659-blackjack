@@ -18,7 +18,7 @@ void stop_timer(Timer *timer);
 void reset_timer(Timer *timer);
 
 
-void update_timer(Timer *timer);
+void decrement_timer(Timer *timer);
 
 
 bool timer_expired(const Timer *timer);

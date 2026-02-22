@@ -4,7 +4,7 @@ void initialize_game(Model *game) {
     initialize_deck(&game->deck);
     shuffle(&game->deck);
 
-    give_start_cards(&game);
+    give_start_cards(game);
 
     initialize_timer(&game->timer, 60);
     
@@ -19,7 +19,7 @@ void new_round(Model *game) {
     remove_cards(&game->player2.hand);
     remove_cards(&game->dealer.hand);
     
-    give_start_cards(&game);
+    give_start_cards(game);
 
     if (game->deck.top > 208) { //if 4/6 ths of the shoe has been used
         shuffle(&game->deck);

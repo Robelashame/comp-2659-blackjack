@@ -7,7 +7,7 @@ void show_hidden(Dealer *dealer) {
 
 void dealer_play(Dealer *dealer, Deck *shoe) {
     if (dealer->hand.value < 17){
-        Card dealt_card = deal(&shoe);
+        Card dealt_card = deal(shoe);
         add_card(&dealer->hand, &dealt_card);
     }
 }
