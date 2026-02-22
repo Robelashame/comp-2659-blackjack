@@ -17,6 +17,7 @@ typedef struct {
     bool player2_turn;
     bool dealer_turn;
     bool is_round_over;
+    bool is_game_over;
 } Model;
 
 void new_round(Model *game);

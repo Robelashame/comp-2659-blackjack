@@ -23,7 +23,7 @@ void initialize_deck(Deck *deck) {
     deck->top = 0;  // dealing from first card
 }
 
-void shuffle_deck(Deck *deck)
+void shuffle(Deck *deck)
 {
     srand(time(NULL)); // gets the time so its always random
     for (int i = NUMBER_OF_DECKS * CARDS_PER_DECK - 1; i > 0; i--) {
