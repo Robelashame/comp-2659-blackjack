@@ -8,6 +8,6 @@ typedef struct {
     int position[2];
 } Card;
 
-int set_value(Card *card);
+void set_value(Card *card);
 
 #endif

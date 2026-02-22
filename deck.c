@@ -1,6 +1,7 @@
 #include "deck.h"
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 void initialize_deck(Deck *deck) {
 
