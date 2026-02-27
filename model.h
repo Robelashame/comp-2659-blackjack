@@ -26,6 +26,4 @@ void initialize_game(Model *game);
 
 void give_start_cards(Model *game);
 
-void two_players(Model *game, bool is_there_plr_2);
-
 #endif

@@ -13,7 +13,6 @@ typedef struct {
 
 void dealer_play(Dealer *dealer, Deck *shoe);
 
-void add_hidden_card(Dealer *dealer, Card *card);
 
 void show_hidden(Dealer *dealer);
 
