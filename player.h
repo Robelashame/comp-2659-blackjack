@@ -12,9 +12,9 @@ typedef struct {
     bool won;
 } Player;
 
-void hit(Player *player, Deck *shoe);
+void hit_plr(Player *player, Deck *shoe);
 
-void stand(Player *player);
+void stand_plr(Player *player);
 
 void bet_on_hand(Player *player, int bet_amount);
 

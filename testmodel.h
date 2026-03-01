@@ -5,7 +5,7 @@
 
 #include "model.h"
 
-void test_two_player(Model *game);
+void test_two_player (Model *game);
 
 void test_game_start(Model *game);
 

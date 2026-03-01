@@ -56,10 +56,10 @@ void decrease_bet(Model *model) {
 
 void bet_confirmed(Model *model) {
     if (model->player1_turn)
-        model->player1.bank -+ model->player1.total_bet;
+        model->player1.bank -= model->player1.total_bet;
 
     else if (model->player2_turn)
-        model->player2.bank -+ model->player2.total_bet;
+        model->player2.bank -= model->player2.total_bet;
 }
 
 void quit(Model *game) {
