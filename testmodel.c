@@ -36,10 +36,10 @@ void test_hit(Model *game) {
     Hand plr_1_hand = game->player1.hand;
 
     printf("Player 1 new card: %s of %s\n", plr_1_hand.cards[2].rank, plr_1_hand.cards[2].suit);
-    printf("Player 1 hand value: %d", plr_1_hand.value);
+    printf("Player 1 hand value: %d\n", plr_1_hand.value);
     player_turn_ends(game);
     if (game->player1_turn == true) {
-        printf("It is still player 1's turn, standing for dealer turn");
+        printf("It is still player 1's turn, standing for dealer turn\n");
         stand(game);
         if (game->is_there_player2 == true)
             stand(game);
@@ -58,9 +58,9 @@ void test_win_or_lose(Model *game) {
     outcome(game, 1);
 
     if (bank_before == game->player1.bank)
-        printf("Player 1 lost");
+        printf("Player 1 lost\n");
     else if (bank_before + bet == game->player1.bank)
-        printf("Player 1 draw");
+        printf("Player 1 draw\n");
     else
-        printf("Player 1 win");
+        printf("Player 1 win\n");
 }
