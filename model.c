@@ -1,8 +1,13 @@
 #include "model.h"
 
 void initialize_game(Model *game) {
+    *game = (Model){0};
+    
     initialize_deck(&game->deck);
     shuffle(&game->deck);
+
+    game->player1.bank = 1000;
+    game->player2.bank = 1000;
 
     give_start_cards(game);
 

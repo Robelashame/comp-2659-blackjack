@@ -1,8 +1,8 @@
 #include "timer.h"
 
 void initialize_timer(Timer *timer, int max_time) {
-    timer->seconds = 0;
-    timer->max_time = MAX_TIME;
+    timer->seconds = max_time;
+    timer->max_time = max_time;
     timer->is_active = false;
 }
 
