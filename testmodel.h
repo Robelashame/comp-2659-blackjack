@@ -4,6 +4,9 @@
 #include <stdbool.h>
 
 #include "model.h"
+#include "asynch.h"
+#include "synch.h"
+#include "cond.h"
 
 void test_two_player (Model *game);
 
@@ -11,14 +14,6 @@ void test_game_start(Model *game);
 
 void test_hit(Model *game);
 
-void test_stand(Model *game);
-
-void test_win(Model *game);
-
-void test_lose(Model *game);
-
-void test_new_round(Model *game);
-
-void test_quit(Model *game);
+void test_win_or_lose(Model *game);
 
 #endif

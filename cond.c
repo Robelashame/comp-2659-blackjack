@@ -38,3 +38,26 @@ void timeout(Model *game) {
         stand(game);
     }
 }
+
+void outcome(Model *game, int player_number) {
+    Player *player;
+
+    if (player_number == 2) {
+        player = &game->player2; 
+    } else {
+        player = &game->player1; 
+    }
+
+    if ((game->dealer.hand.value < player->hand.value) && (player->hand.value != 21)) {
+        player->bank += (player->total_bet * 2);
+    } else if ((game->dealer.hand.value < player->hand.value) && (player->hand.value == 21)) {
+        player->bank += (player->total_bet * 5) / 2;    //3 to 2 payout for getting blackjack
+    } else if (game->dealer.hand.value > 21 && player->hand.value <= 21) {
+        player->bank += (player->total_bet * 2);
+    } else if (game->dealer.hand.value == player->hand.value){
+        player->bank += player->total_bet;
+    }
+    
+    player->total_bet = 0;
+}
+
