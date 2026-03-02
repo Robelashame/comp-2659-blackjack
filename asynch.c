@@ -1,7 +1,7 @@
 #include "asynch.h"
 
 void hit(Model *game) {
-    if (game->player1_turn == true && game->is_there_player2 == true) {
+    if (game->player1_turn == true) {
         Card dealt_card = deal(&game->deck);
         add_card(&game->player1.hand, &dealt_card);
     }
