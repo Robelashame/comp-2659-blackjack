@@ -7,10 +7,10 @@ void test_two_player(Model *game) {
     scanf("%d", &player_count);
     if (player_count == 1) {
         game->is_there_player2 = true;
-        printf("Game will have 2 players");
+        printf("Game will have 2 players(but im not showing it just trust me)\n");
     } else {
         game->is_there_player2 = false;
-        printf("Game will have 1 player");
+        printf("Game will have 1 player\n");
     }
 }
 
@@ -52,16 +52,21 @@ void test_hit(Model *game) {
 void test_win_or_lose(Model *game) {
     dealer_draws(game);
 
-    int bank_before = game->player1.bank;
-    int bet = game->player1.total_bet;
-
     outcome(game, 1);
 
-    printf("Dealers hand value: %d\n", game->dealer.hand.value);
-    if (bank_before == game->player1.bank)
-        printf("Player 1 lost\n");
-    else if (bank_before + bet == game->player1.bank)
-        printf("Player 1 draw\n");
-    else
-        printf("Player 1 win\n");
+    int player1value = game->player1.hand.value;
+    int dealervalue = game->dealer.hand.value;
+
+    printf("Dealers hand value: %d\n", dealervalue);
+    if (player1value > 21) {
+        printf("Player 1 lost\n");   // player busts → always lose
+    } else if (dealervalue > 21) {
+        printf("Player 1 win\n");    // dealer busts → player wins (only if player didn't bust)
+    } else if (player1value > dealervalue) {
+        printf("Player 1 win\n");    // player higher without bust
+    } else if (player1value < dealervalue) {
+        printf("Player 1 lost\n");   // dealer higher without bust
+    } else {
+        printf("Player 1 draw\n");   // equal values, no bust
+    }
 }
