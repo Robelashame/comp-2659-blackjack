@@ -57,6 +57,7 @@ void test_win_or_lose(Model *game) {
 
     outcome(game, 1);
 
+    printf("Dealers hand value: %d\n", game->dealer.hand.value);
     if (bank_before == game->player1.bank)
         printf("Player 1 lost\n");
     else if (bank_before + bet == game->player1.bank)
