@@ -24,7 +24,7 @@ void clear_screen(UINT32 *base)
     int i;
     for(i = 0; i < SCREEN_BYTES; i++)
     {
-        base[i] = 0xFFFFFFFF;
+        base[i] = 0x00000000;
     }
 }
 
@@ -87,12 +87,19 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
 
 void plot_rectangle(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 {
+    if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || row + length - 1 >= SCREEN_HEIGHT || col + width - 1 >= SCREEN_WIDTH)
+        return;
+
     
+    plot_vertical_line(base, row, col, length);
+    plot_horizontal_line(base, row, col, width);
+    plot_vertical_line(base, row, col + width - 1, length);
+    plot_horizontal_line(base, row + length - 1, col, width);
 }
 
 void plot_square(UINT32 *base, int row, int col, UINT16 side)
 {
-    
+    plot_rectangle(base, row, col, side, side);
 }
 
 void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 height, UINT8 direction)
