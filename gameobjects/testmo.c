@@ -15,24 +15,24 @@ void test_two_player(Model *game) {
 }
 
 void test_game_start(Model *game) {
-    Hand plr_1_hand;
-    Dealer game_dealer;
-    Deck shoe;
+    Hand *plr_1_hand;
+    Dealer *game_dealer;
+    Deck *shoe;
     
     initialize_game(game);
 
     test_two_player(game);
 
-    plr_1_hand = game->player1.hand;
-    game_dealer = game->dealer;
-    shoe = game->deck;
+    plr_1_hand = &game->player1.hand;
+    game_dealer = &game->dealer;
+    shoe = &game->deck;
 
     printf("Game start:\n");
-    printf("Player 1 starting card 1: %s of %s, ", plr_1_hand.cards[0].rank, plr_1_hand.cards[0].suit);
-    printf("%s of %s\n", plr_1_hand.cards[1].rank, plr_1_hand.cards[1].suit);
-    printf("Dealer showing card: %s of %s, ", game_dealer.hand.cards[0].rank, game_dealer.hand.cards[0].suit);
-    printf("Hidden card: %s of %s\n", game_dealer.hidden_card.rank, game_dealer.hidden_card.suit);
-    printf("Deck top card: %s of %s\n", shoe.cards[shoe.top].rank, shoe.cards[shoe.top].suit);
+    printf("Player 1 starting card 1: %s of %s, ", plr_1_hand->cards[0].rank, plr_1_hand->cards[0].suit);
+    printf("%s of %s\n", plr_1_hand->cards[1].rank, plr_1_hand->cards[1].suit);
+    printf("Dealer showing card: %s of %s, ", game_dealer->hand.cards[0].rank, game_dealer->hand.cards[0].suit);
+    printf("Hidden card: %s of %s\n", game_dealer->hidden_card.rank, game_dealer->hidden_card.suit);
+    printf("Deck top card: %s of %s\n", shoe->cards[shoe->top].rank, shoe->cards[shoe->top].suit);
     printf("Player 1 turn\n");
 }
 
