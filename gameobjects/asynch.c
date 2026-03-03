@@ -1,12 +1,13 @@
 #include "asynch.h"
 
 void hit(Model *game) {
+
+    Card dealt_card = deal(&game->deck);
+
     if (game->player1_turn == TRUE) {
-        Card dealt_card = deal(&game->deck);
         add_card(&game->player1.hand, &dealt_card);
     }
     else if (game->player2_turn == TRUE) {
-        Card dealt_card = deal(&game->deck);
         add_card(&game->player2.hand, &dealt_card);
     }
 }

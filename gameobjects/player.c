@@ -1,7 +1,8 @@
 #include "player.h"
 
 void hit_plr(Player *player, Deck *shoe) {
-    Card delt_card = deal(shoe);
+    Card delt_card;
+    delt_card = deal(shoe);
     add_card(&player->hand, &delt_card);
     player->active_turn = !(is_blackjack(&player->hand) || is_bust(&player->hand));
 }

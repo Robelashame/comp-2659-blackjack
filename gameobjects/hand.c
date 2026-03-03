@@ -2,7 +2,8 @@
 
 int calculate_hand_value(Hand *hand) {
     int value = 0;
-    for (int i = 0; i < hand->num_of_cards; i++) {
+    int i;
+    for (i = 0; i < hand->num_of_cards; i++) {
         value += hand->cards[i].value;
     }
     return value;
@@ -37,7 +38,8 @@ int is_bust(Hand *hand) {
 }
 
 void remove_cards(Hand *hand) {
-    for (int i = 0; i < hand->num_of_cards; i++) {
+    int i;
+    for (i = 0; i < hand->num_of_cards; i++) {
         hand->cards[i] = (Card){0};
     }
     hand->num_of_cards = 0;

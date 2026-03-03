@@ -42,8 +42,9 @@ void two_players(Model *game, int is_there_plr_2) {
 }
 
 void give_start_cards(Model *game) {
+    Card dealt_card;
     if (game->is_there_player2 == TRUE) {
-        Card dealt_card = deal(&game->deck);    //player 1 first card
+        dealt_card = deal(&game->deck);    //player 1 first card
         add_card(&game->player1.hand, &dealt_card);
 
         dealt_card = deal(&game->deck); //player 2 first card
@@ -61,7 +62,7 @@ void give_start_cards(Model *game) {
         dealt_card = deal(&game->deck); //dealer hidden card
         add_hidden_card(&game->dealer, &dealt_card);
     } else {
-        Card dealt_card = deal(&game->deck);    //player 1 first card
+        dealt_card = deal(&game->deck);    //player 1 first card
         add_card(&game->player1.hand, &dealt_card);
 
         dealt_card = deal(&game->deck);

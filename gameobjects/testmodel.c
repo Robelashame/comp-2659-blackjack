@@ -15,11 +15,15 @@ void test_two_player(Model *game) {
 }
 
 void test_game_start(Model *game) {
+    Hand plr_1_hand;
+    Dealer game_dealer;
+    Deck shoe;
+    
     initialize_game(game);
 
-    Hand plr_1_hand = game->player1.hand;
-    Dealer game_dealer = game->dealer;
-    Deck shoe = game->deck;
+    plr_1_hand = game->player1.hand;
+    game_dealer = game->dealer;
+    shoe = game->deck;
 
     printf("Game start:\n");
     printf("Player 1 starting card 1: %s of %s, ", plr_1_hand.cards[0].rank, plr_1_hand.cards[0].suit);
@@ -31,9 +35,11 @@ void test_game_start(Model *game) {
 }
 
 void test_hit(Model *game) {
+    Hand plr_1_hand;
+    
     hit(game);
     
-    Hand plr_1_hand = game->player1.hand;
+    plr_1_hand = game->player1.hand;
 
     printf("Player 1 new card: %s of %s\n", plr_1_hand.cards[2].rank, plr_1_hand.cards[2].suit);
     printf("Player 1 hand value: %d\n", plr_1_hand.value);
@@ -50,12 +56,15 @@ void test_hit(Model *game) {
 }
 
 void test_win_or_lose(Model *game) {
+    int player1value;
+    int dealervalue;
+    
     dealer_draws(game);
 
     outcome(game, 1);
 
-    int player1value = game->player1.hand.value;
-    int dealervalue = game->dealer.hand.value;
+    player1value = game->player1.hand.value;
+    dealervalue = game->dealer.hand.value;
 
     printf("Dealers hand value: %d\n", dealervalue);
     if (player1value > 21) {
