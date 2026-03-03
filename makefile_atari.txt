@@ -1,0 +1,23 @@
+# Compiler for Atari ST
+CC = cc68x
+
+TARGET = test
+
+SRCS = \
+	asynch.c \
+	card.c \
+	cond.c \
+	dealer.c \
+	deck.c \
+	hand.c \
+	model.c \
+	player.c \
+	timer.c \
+	testmodel.c \
+	test.c
+
+all:
+	$(CC) $(SRCS) -o $(TARGET)
+
+clean:
+	rm -f $(TARGET)
