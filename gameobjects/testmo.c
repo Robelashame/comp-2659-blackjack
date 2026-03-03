@@ -21,6 +21,8 @@ void test_game_start(Model *game) {
     
     initialize_game(game);
 
+    test_two_player(game);
+
     plr_1_hand = game->player1.hand;
     game_dealer = game->dealer;
     shoe = game->deck;

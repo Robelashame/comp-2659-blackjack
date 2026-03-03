@@ -2,6 +2,8 @@
 #include <string.h>
 
 void initialize_game(Model *game) {
+
+    
     memset(game, 0, sizeof(Model));
     
     initialize_deck(&game->deck);
