@@ -1,4 +1,4 @@
-#include "testmodel.h"
+#include "testmo.h"
 
 int main() {
     Model game;

@@ -1,5 +1,5 @@
-#ifndef TESTMODEL_H
-#define TESTMODEL_H
+#ifndef TESTMO_H
+#define TESTMO_H
 
 #include "model.h"
 #include "asynch.h"

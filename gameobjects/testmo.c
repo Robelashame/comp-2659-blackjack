@@ -1,4 +1,4 @@
-#include "testmodel.h"
+#include "testmo.h"
 #include <stdio.h>
 
 void test_two_player(Model *game) {

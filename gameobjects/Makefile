@@ -14,7 +14,7 @@ SRCS = \
 	model.c \
 	player.c \
 	timer.c \
-	testmodel.c \
+	testmo.c \
 	test.c
 
 OBJS = $(SRCS:.c=.o)
