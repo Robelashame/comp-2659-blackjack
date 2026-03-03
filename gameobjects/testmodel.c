@@ -68,14 +68,14 @@ void test_win_or_lose(Model *game) {
 
     printf("Dealers hand value: %d\n", dealervalue);
     if (player1value > 21) {
-        printf("Player 1 lost\n");   // player busts → always lose
+        printf("Player 1 lost\n");   /* player busts → always lose */
     } else if (dealervalue > 21) {
-        printf("Player 1 win\n");    // dealer busts → player wins (only if player didn't bust)
+        printf("Player 1 win\n");    /* dealer busts → player wins (only if player didn't bust) */
     } else if (player1value > dealervalue) {
-        printf("Player 1 win\n");    // player higher without bust
+        printf("Player 1 win\n");    /* player higher without bust */
     } else if (player1value < dealervalue) {
-        printf("Player 1 lost\n");   // dealer higher without bust
+        printf("Player 1 lost\n");   /* dealer higher without bust */
     } else {
-        printf("Player 1 draw\n");   // equal values, no bust
+        printf("Player 1 draw\n");   /* equal values, no bust */
     }
 }

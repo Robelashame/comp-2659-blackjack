@@ -51,7 +51,7 @@ void outcome(Model *game, int player_number) {
     if ((game->dealer.hand.value < player->hand.value) && (player->hand.value != 21)) {
         player->bank += (player->total_bet * 2);
     } else if ((game->dealer.hand.value < player->hand.value) && (player->hand.value == 21)) {
-        player->bank += (player->total_bet * 5) / 2;    //3 to 2 payout for getting blackjack
+        player->bank += (player->total_bet * 5) / 2;    /* 3 to 2 payout for getting blackjack */
     } else if (game->dealer.hand.value > 21 && player->hand.value <= 21) {
         player->bank += (player->total_bet * 2);
     } else if (game->dealer.hand.value == player->hand.value){
