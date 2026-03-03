@@ -2,10 +2,9 @@
 #include "types.h"
 
 #define SCREEN_BYTES 32000
-#define SCREEN_WIDTH 320
-#define SCREEN_WIDTH_BYTES 160
-#define SCREEN_HEIGHT 200
-#define SCREEN_HEIGHT_BYTES 100
+#define SCREEN_WIDTH 640
+#define SCREEN_WIDTH_BYTES 80
+#define SCREEN_HEIGHT 400
 
  /* byteOffset = row * 80 + (col / 8) */ 
  /* times by 80 is offset for bytes per row */ 
@@ -24,7 +23,7 @@ void clear_screen(UINT32 *base)
     int i;
     for(i = 0; i < SCREEN_BYTES; i++)
     {
-        base[i] = 0xFFFFFFFF;
+        base[i] = 0x00000000;
     }
 }
 
@@ -47,9 +46,9 @@ void clear_region(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 
     for(r = row; r < yEnd; r++) {                
         for(c = col; c < xEnd; c++) {            
-            byteOffset = r * 80 + (c >> 3);      /* find byte */
+            byteOffset = r * SCREEN_WIDTH_BYTES + (c >> 3);      /* find byte */
             mask = 0x01 << (7 - (c & 7));          /* find bit */
-            base8[byteOffset] &= 0x00;   /* clear bit */
+            base8[byteOffset] &= (UINT8)~mask;   /* clear bit */
         }   
     }
 }
@@ -57,7 +56,7 @@ void clear_region(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 void plot_pixel(UINT8 *base, int row, int col)
 {
     if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH) return;
-    *(base + col * 80 + (row >> 3)) |= 1 << (7 - (row >> 3));
+    *(base + row * SCREEN_WIDTH_BYTES + (col >> 3)) |= 1 << (7 - (col & 7));
 }
 
 void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
@@ -80,19 +79,64 @@ void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
     }
 }
 
+/* Bresenham’s Algorithm, idk it works but im using it cause it works :D */
 void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_col)
 {
-    
+    UINT8 *base8 = (UINT8 *)base;
+    int x0, x1, y0, y1, dx, dy, sx, sy, err, e2;
+
+    x0 = start_col;
+    x1 = end_col;
+    y0 = start_row;
+    y1 = end_row;
+
+    /* difference between points, or the length between them */
+    dy = abs(y1 - y0);
+    dx = abs(x1 - x0);
+
+    /* step variable, determines whether the line steps left or right, up or down */
+    sy = (y0 < y1) ? 1 : -1;
+    sx = (x0 < x1) ? 1 : -1;
+
+
+    /* determines how off you are from the ideal line between points */
+    err = dx - dy;
+
+    while(1) {
+        plot_pixel(base8, y0, x0);
+        if (x0 == x1 && y0 == y1) break;
+
+        /* 2*err, bresenham doesn't want to use fractions, so instead of checking the midpoint at 1/2 we check 1 which is between 0 and 2 */
+        e2 = err << 1;
+
+        /*  */
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+        } 
+        /*  */
+        if (e2 < dx) {
+        err += dx;
+        y0 += sy;
+        }
+    }
 }
 
 void plot_rectangle(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 {
-    
+    if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || row + length - 1 >= SCREEN_HEIGHT || col + width - 1 >= SCREEN_WIDTH) 
+        return;
+    plot_vertical_line(base, row, col, length);
+    plot_horizontal_line(base, row, col, width);
+    plot_vertical_line(base, row, col + width - 1, length);
+    plot_horizontal_line(base, row + length - 1, col, width);
 }
 
 void plot_square(UINT32 *base, int row, int col, UINT16 side)
 {
-    
+    if (row < 0 || col < 0 || side == 0 || row + side > SCREEN_HEIGHT || col + side > SCREEN_WIDTH) 
+        return;
+    plot_rectangle(base, row, col, side, side);
 }
 
 void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 height, UINT8 direction)

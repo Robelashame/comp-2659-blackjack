@@ -88,7 +88,7 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
 
  INPUT: Address(UINT32*): to the start of the screen
         Position(row,col): the coordinates of the top left pixel of the rectangle
-        Length: the lenth (number of rows) in pixels of the rectangle
+        Length: the length (number of rows) in pixels of the rectangle
         Width: the width (number of columns) in pixels of the rectangle
 
  OUTPUT: None
