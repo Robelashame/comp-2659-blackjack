@@ -11,6 +11,7 @@ typedef struct {
     int bet_amount;
     int position[2];
     int num_of_cards;
+    int ace_count;
 } Hand;
 
 void add_card(Hand *hand, Card *card);

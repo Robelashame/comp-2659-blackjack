@@ -1,26 +1,35 @@
 #include "hand.h"
 
 int calculate_hand_value(Hand *hand) {
-    int value = 0;
+    int value;
     int i;
+    int ace_count;
+
+    value = 0;
+    ace_count = 0;
+
     for (i = 0; i < hand->num_of_cards; i++) {
         value += hand->cards[i].value;
+
+        if (hand->cards[i].value == 11)
+            ace_count++;
+        
+        while (value > 21 && ace_count > 0) {
+            value -= 10;
+            ace_count--;
+        }
     }
     return value;
 }
 
 void add_card(Hand *hand, Card *card) {
-    int index = 0;
-    while (index < hand->num_of_cards) {
-        index++;
-    }
+    int index;
+    index = hand->num_of_cards;
+
     hand->cards[index] = (*card);
     hand->num_of_cards++;
-    if (card->value == 11 && hand->value > 11) {
-        hand->value++;
-    } else {
-        hand->value = calculate_hand_value(hand);
-    }
+
+    hand->value = calculate_hand_value(hand);
 }
 
 int is_blackjack(Hand *hand) {
