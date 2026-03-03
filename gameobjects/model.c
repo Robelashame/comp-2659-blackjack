@@ -1,11 +1,11 @@
 #include "model.h"
 #include <string.h>
+#include <stdio.h>
 
 void initialize_game(Model *game) {
-
-    
+    printf("before memset\n");
     memset(game, 0, sizeof(Model));
-    
+    printf("after memset\n");
     initialize_deck(&game->deck);
     shuffle(&game->deck);
 
