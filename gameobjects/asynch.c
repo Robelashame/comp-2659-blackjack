@@ -2,7 +2,8 @@
 
 void hit(Model *game) {
 
-    Card dealt_card = deal(&game->deck);
+    Card dealt_card;
+    dealt_card = deal(&game->deck);
 
     if (game->player1_turn == TRUE) {
         add_card(&game->player1.hand, &dealt_card);

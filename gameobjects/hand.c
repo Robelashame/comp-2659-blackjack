@@ -40,7 +40,9 @@ int is_bust(Hand *hand) {
 void remove_cards(Hand *hand) {
     int i;
     for (i = 0; i < hand->num_of_cards; i++) {
-        hand->cards[i] = (Card){0};
+        hand->cards[i].rank[0] = '\0';
+        hand->cards[i].suit[0] = '\0';
+        hand->cards[i].value = 0;
     }
     hand->num_of_cards = 0;
     hand->bet_amount = 0;

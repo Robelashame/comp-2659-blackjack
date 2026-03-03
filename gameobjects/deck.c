@@ -40,7 +40,8 @@ void shuffle(Deck *deck)
 }
 
 Card deal(Deck *deck) {
-    Card delt_card = deck->cards[deck->top];
+    Card delt_card;
+    delt_card = deck->cards[deck->top];
     deck->top++;
     return delt_card;
 }

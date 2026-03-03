@@ -1,7 +1,8 @@
 #include "model.h"
+#include <string.h>
 
 void initialize_game(Model *game) {
-    *game = (Model){0};
+    memset(game, 0, sizeof(Model));
     
     initialize_deck(&game->deck);
     shuffle(&game->deck);
