@@ -6,10 +6,10 @@ void test_two_player(Model *game) {
     printf("Press 1 for player 2: ");
     scanf("%d", &player_count);
     if (player_count == 1) {
-        game->is_there_player2 = true;
+        game->is_there_player2 = TRUE;
         printf("Game will have 2 players(but im not showing it just trust me)\n");
     } else {
-        game->is_there_player2 = false;
+        game->is_there_player2 = FALSE;
         printf("Game will have 1 player\n");
     }
 }
@@ -38,13 +38,13 @@ void test_hit(Model *game) {
     printf("Player 1 new card: %s of %s\n", plr_1_hand.cards[2].rank, plr_1_hand.cards[2].suit);
     printf("Player 1 hand value: %d\n", plr_1_hand.value);
     player_turn_ends(game);
-    if (game->player1_turn == true) {
+    if (game->player1_turn == TRUE) {
         printf("It is still player 1's turn, standing for dealer turn\n");
         stand(game);
-        if (game->is_there_player2 == true)
+        if (game->is_there_player2 == TRUE)
             stand(game);
     } else {
-        if (game->is_there_player2 == true)
+        if (game->is_there_player2 == TRUE)
             stand(game);
     }
 }

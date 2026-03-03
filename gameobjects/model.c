@@ -13,10 +13,10 @@ void initialize_game(Model *game) {
 
     initialize_timer(&game->timer, 60);
     
-    game->player1_turn = true;
-    game->player2_turn = false;
-    game->dealer_turn = false;
-    game->is_round_over = false;
+    game->player1_turn = TRUE;
+    game->player2_turn = FALSE;
+    game->dealer_turn = FALSE;
+    game->is_round_over = FALSE;
 }
 
 void new_round(Model *game) {
@@ -30,19 +30,19 @@ void new_round(Model *game) {
         shuffle(&game->deck);
     }
 
-    game->player1_turn = true;
-    game->player2_turn = false;
-    game->dealer_turn = false;
-    game->is_round_over = false;
+    game->player1_turn = TRUE;
+    game->player2_turn = FALSE;
+    game->dealer_turn = FALSE;
+    game->is_round_over = FALSE;
 
 }
 
-void two_players(Model *game, bool is_there_plr_2) {
+void two_players(Model *game, int is_there_plr_2) {
     game->is_there_player2 = is_there_plr_2;
 }
 
 void give_start_cards(Model *game) {
-    if (game->is_there_player2 == true) {
+    if (game->is_there_player2 == TRUE) {
         Card dealt_card = deal(&game->deck);    //player 1 first card
         add_card(&game->player1.hand, &dealt_card);
 

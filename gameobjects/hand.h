@@ -1,6 +1,7 @@
 #ifndef HAND_H
 #define HAND_H
-#include <stdbool.h>
+#define TRUE 1
+#define FALSE 0
 
 #include "card.h"
 
@@ -18,8 +19,7 @@ void remove_cards(Hand *hand);
 
 int calculate_hand_value(Hand *hand);
 
-bool is_blackjack(Hand *hand);
-
-bool is_bust(Hand *hand);
+int is_blackjack(Hand *hand);
+int is_bust(Hand *hand);
 
 #endif

@@ -7,7 +7,7 @@ void hit_plr(Player *player, Deck *shoe) {
 }
 
 void stand_plr(Player *player) {
-    player->active_turn = false;
+    player->active_turn = FALSE;
 }
 
 void bet_on_hand(Player *player, int bet_amount) {

@@ -1,7 +1,7 @@
 #include "dealer.h"
 
 void show_hidden(Dealer *dealer) {
-    dealer->is_showing_hidden = true;
+    dealer->is_showing_hidden = TRUE;
     add_card(&dealer->hand, &dealer->hidden_card);
 }
 

@@ -11,24 +11,24 @@ void new_round_start(Model *game) {
 
 void dealer_draws(Model *game) {
     dealer_play(&game->dealer, &game->deck);
-    game->dealer_turn = false;
+    game->dealer_turn = FALSE;
 }
 
 void player_turn_ends(Model *game) {
-    if (game->player1_turn == true) {
+    if (game->player1_turn == TRUE) {
         if (is_blackjack(&game->player1.hand) || is_bust(&game->player1.hand)) {
             if (game->is_there_player2) {
-                game->player1_turn = false;
-                game->player2_turn = true;
+                game->player1_turn = FALSE;
+                game->player2_turn = TRUE;
             } else {
-                game->player1_turn = false;
-                game->dealer_turn = true;
+                game->player1_turn = FALSE;
+                game->dealer_turn = TRUE;
             }
         }
-    } else if (game->player2_turn == true){
+    } else if (game->player2_turn == TRUE){
         if (is_blackjack(&game->player2.hand) || is_bust(&game->player2.hand)) {
-            game->player2_turn = false;
-            game->dealer_turn = true;
+            game->player2_turn = FALSE;
+            game->dealer_turn = TRUE;
         }
     }
 }

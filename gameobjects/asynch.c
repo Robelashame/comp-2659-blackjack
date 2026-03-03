@@ -1,30 +1,30 @@
 #include "asynch.h"
 
 void hit(Model *game) {
-    if (game->player1_turn == true) {
+    if (game->player1_turn == TRUE) {
         Card dealt_card = deal(&game->deck);
         add_card(&game->player1.hand, &dealt_card);
     }
-    else if (game->player2_turn == true) {
+    else if (game->player2_turn == TRUE) {
         Card dealt_card = deal(&game->deck);
         add_card(&game->player2.hand, &dealt_card);
     }
 }
 
 void stand(Model *game) {
-    if (game->player1_turn == true && game->is_there_player2 == true) {
-        game->player1_turn = false;
-        game->player2_turn = true;
+    if (game->player1_turn == TRUE && game->is_there_player2 == TRUE) {
+        game->player1_turn = FALSE;
+        game->player2_turn = TRUE;
     }
 
-    else if (game->player2_turn == true) {
-        game->player2_turn = false;
-        game->dealer_turn = true;
+    else if (game->player2_turn == TRUE) {
+        game->player2_turn = FALSE;
+        game->dealer_turn = TRUE;
     }
 
-    else if (game->player1_turn == true && game->is_there_player2 == false) {
-        game->player1_turn = false;
-        game->dealer_turn = true;
+    else if (game->player1_turn == TRUE && game->is_there_player2 == FALSE) {
+        game->player1_turn = FALSE;
+        game->dealer_turn = TRUE;
     }
 }
 
@@ -63,6 +63,6 @@ void bet_confirmed(Model *model) {
 }
 
 void quit(Model *game) {
-    game->is_game_over = true;
+    game->is_game_over = TRUE;
 }
 

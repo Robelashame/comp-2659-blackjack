@@ -22,18 +22,18 @@ void add_card(Hand *hand, Card *card) {
     }
 }
 
-bool is_blackjack(Hand *hand) {
+int is_blackjack(Hand *hand) {
     if (hand->value == 21)
-        return true;
+        return TRUE;
     else 
-        return false;
+        return FALSE;
 }
 
-bool is_bust(Hand *hand) {
+int is_bust(Hand *hand) {
     if (hand->value > 21)
-        return true;
+        return TRUE;
     else 
-        return false;
+        return FALSE;
 }
 
 void remove_cards(Hand *hand) {

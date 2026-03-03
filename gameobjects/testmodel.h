@@ -1,8 +1,6 @@
 #ifndef TESTMODEL_H
 #define TESTMODEL_H
 
-#include <stdbool.h>
-
 #include "model.h"
 #include "asynch.h"
 #include "synch.h"
