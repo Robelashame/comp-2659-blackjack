@@ -66,7 +66,7 @@ void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
     UINT8 *byte_base = (UINT8 *)base;
     for(i = 0; i < length; i++)
     {
-        plot_pixel(byte_base, row + i, col);
+        plot_pixel(byte_base, row, col + i);
     }
 }
 
@@ -76,7 +76,7 @@ void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
     UINT8 *byte_base = (UINT8 *)base;
     for(i = 0; i < length; i++)
     {
-        plot_pixel(byte_base, row, col + i);
+        plot_pixel(byte_base, row + i, col);
     }
 }
 
@@ -87,7 +87,12 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
 
 void plot_rectangle(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 {
-    
+    if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || row + length - 1 >= SCREEN_HEIGHT || col + width - 1 >= SCREEN_WIDTH) 
+        return;
+    plot_vertical_line(base, row, col, length);
+    plot_horizontal_line(base, row, col, width);
+    plot_vertical_line(base, row, col + width - 1, length);
+    plot_horizontal_line(base, row + length - 1, col, width);
 }
 
 void plot_square(UINT32 *base, int row, int col, UINT16 side)
