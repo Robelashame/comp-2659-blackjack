@@ -1,14 +1,14 @@
 #ifndef TIMER_H
 #define TIMER_H
-
-#include <stdbool.h>
+#define TRUE 1
+#define FALSE 0
 
 #define MAX_TIME 60
 
 typedef struct {
     int seconds;
     int max_time;
-    bool is_active;
+    int is_active;
 } Timer;
 
 void initialize_timer(Timer *timer, int max_time);
@@ -21,6 +21,6 @@ void reset_timer(Timer *timer);
 void decrement_timer(Timer *timer);
 
 
-bool timer_expired(const Timer *timer);
+int timer_expired(const Timer *timer);
 
 #endif

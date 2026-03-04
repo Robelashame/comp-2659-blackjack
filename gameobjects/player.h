@@ -8,13 +8,12 @@ typedef struct {
     int bank;
     int total_bet;
     Hand hand;
-    bool active_turn;
-    bool won;
+    int active_turn;
 } Player;
 
-void hit(Player *player, Deck *shoe);
+void hit_plr(Player *player, Deck *shoe);
 
-void stand(Player *player);
+void stand_plr(Player *player);
 
 void bet_on_hand(Player *player, int bet_amount);
 

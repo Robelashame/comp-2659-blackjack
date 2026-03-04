@@ -1,30 +1,32 @@
 #include "asynch.h"
 
 void hit(Model *game) {
-    if (game->player1_turn == true && game->is_there_player2 == true) {
-        Card dealt_card = deal(&game->deck);
+
+    Card dealt_card;
+    dealt_card = deal(&game->deck);
+
+    if (game->player1_turn == TRUE) {
         add_card(&game->player1.hand, &dealt_card);
     }
-    else if (game->player2_turn == true) {
-        Card dealt_card = deal(&game->deck);
+    else if (game->player2_turn == TRUE) {
         add_card(&game->player2.hand, &dealt_card);
     }
 }
 
 void stand(Model *game) {
-    if (game->player1_turn == true && game->is_there_player2 == true) {
-        game->player1_turn = false;
-        game->player2_turn = true;
+    if (game->player1_turn == TRUE && game->is_there_player2 == TRUE) {
+        game->player1_turn = FALSE;
+        game->player2_turn = TRUE;
     }
 
-    else if (game->player2_turn == true) {
-        game->player2_turn = false;
-        game->dealer_turn = true;
+    else if (game->player2_turn == TRUE) {
+        game->player2_turn = FALSE;
+        game->dealer_turn = TRUE;
     }
 
-    else if (game->player1_turn == true && game->is_there_player2 == false) {
-        game->player1_turn = false;
-        game->dealer_turn = true;
+    else if (game->player1_turn == TRUE && game->is_there_player2 == FALSE) {
+        game->player1_turn = FALSE;
+        game->dealer_turn = TRUE;
     }
 }
 
@@ -56,13 +58,13 @@ void decrease_bet(Model *model) {
 
 void bet_confirmed(Model *model) {
     if (model->player1_turn)
-        model->player1.bank -+ model->player1.total_bet;
+        model->player1.bank -= model->player1.total_bet;
 
     else if (model->player2_turn)
-        model->player2.bank -+ model->player2.total_bet;
+        model->player2.bank -= model->player2.total_bet;
 }
 
 void quit(Model *game) {
-    game->is_game_over = true;
+    game->is_game_over = TRUE;
 }
 

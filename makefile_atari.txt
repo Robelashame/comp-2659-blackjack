@@ -1,0 +1,40 @@
+//Copy the below into Makefile for the objects for atari, leave same for this one.
+testmo: test.o testmo.o model.o player.o dealer.o deck.o hand.o card.o timer.o asynch.o cond.o
+	cc68x -g test.o testmo.o model.o player.o dealer.o deck.o hand.o card.o timer.o asynch.o cond.o -o testmo
+
+
+test.o: test.c testmo.h
+	cc68x -g -c test.c
+
+testmo.o: testmo.c testmo.h model.h asynch.h synch.h cond.h
+	cc68x -g -c testmo.c
+
+model.o: model.c model.h player.h dealer.h deck.h timer.h
+	cc68x -g -c model.c
+
+player.o: player.c player.h hand.h deck.h
+	cc68x -g -c player.c
+
+dealer.o: dealer.c dealer.h hand.h deck.h card.h
+	cc68x -g -c dealer.c
+
+deck.o: deck.c deck.h card.h
+	cc68x -g -c deck.c
+
+hand.o: hand.c hand.h card.h
+	cc68x -g -c hand.c
+
+card.o: card.c card.h
+	cc68x -g -c card.c
+
+timer.o: timer.c timer.h
+	cc68x -g -c timer.c
+
+asynch.o: asynch.c asynch.h model.h
+	cc68x -g -c asynch.c
+
+cond.o: cond.c cond.h asynch.h model.h
+	cc68x -g -c cond.c
+
+clean:
+	rm -f *.o testmo
