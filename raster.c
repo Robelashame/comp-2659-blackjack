@@ -168,6 +168,7 @@ void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 
         height_ex = col;
         height_ey = row - (height - 1);
     } else return;
+    
     if (base_ey < minRow) minRow = base_ey;
     if (base_ey > maxRow) maxRow = base_ey;
     if (height_ey < minRow) minRow = height_ey;
@@ -178,11 +179,11 @@ void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 
     if (height_ex < minCol) minCol = height_ex;
     if (height_ex > maxCol) maxCol = height_ex;  
 
-    if (minRow < 0 || minRow < 0 || maxRow >= SCREEN_HEIGHT || maxCol >= SCREEN_WIDTH) return;
+    if (minRow < 0 || minCol < 0 || maxRow >= SCREEN_HEIGHT || maxCol >= SCREEN_WIDTH) return;
 
-    plot_line(base, row, col, base_ex, base_ey);
-    plot_line(base, row, col, height_ex, height_ey);
-    plot_line(base, base_ex, base_ey, height_ex, height_ey);
+    plot_line(base, row, col, base_ey, base_ex);
+    plot_line(base, row, col, height_ey, height_ex);
+    plot_line(base, base_ey, base_ex, height_ey, height_ex);
 }
 
 void plot_8bit_bitmap(UINT8 *base, int row, int col, const UINT8 *bitmap, UINT16 height)
