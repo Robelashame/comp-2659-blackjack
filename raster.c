@@ -140,8 +140,49 @@ void plot_square(UINT32 *base, int row, int col, UINT16 side)
 }
 
 void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 height, UINT8 direction)
-{
-    
+{   
+    int base_ex, base_ey, height_ex, height_ey;
+    int minRow = row, maxRow = row, minCol = col, maxCol = col;
+    /* top left corner = base to the right and height down */
+    if (direction == 0) {
+        base_ex = col + triangle_base - 1;
+        base_ey = row;
+        height_ex = col;
+        height_ey = row + height - 1;
+    /* top right corner = base to the left and height down */
+    } else if (direction == 1) { 
+        base_ex = col - (triangle_base - 1);
+        base_ey = row;
+        height_ex = col;
+        height_ey = row + height - 1;
+    /* bottom left corner = base to the right and height up */
+    } else if (direction == 2) {
+        base_ex = col + triangle_base - 1;
+        base_ey = row;
+        height_ex = col;
+        height_ey = row - (height - 1);
+    /* bottom right corner = base to the left and height up */
+    } else if (direction == 3) {
+        base_ex = col - (triangle_base - 1);
+        base_ey = row;
+        height_ex = col;
+        height_ey = row - (height - 1);
+    } else return;
+    if (base_ey < minRow) minRow = base_ey;
+    if (base_ey > maxRow) maxRow = base_ey;
+    if (height_ey < minRow) minRow = height_ey;
+    if (height_ey > maxRow) maxRow = height_ey;
+
+    if (base_ex < minCol) minCol = base_ex;
+    if (base_ex > maxCol) maxCol = base_ex;
+    if (height_ex < minCol) minCol = height_ex;
+    if (height_ex > maxCol) maxCol = height_ex;  
+
+    if (minRow < 0 || minRow < 0 || maxRow >= SCREEN_HEIGHT || maxCol >= SCREEN_WIDTH) return;
+
+    plot_line(base, row, col, base_ex, base_ey);
+    plot_line(base, row, col, height_ex, height_ey);
+    plot_line(base, base_ex, base_ey, height_ex, height_ey);
 }
 
 void plot_8bit_bitmap(UINT8 *base, int row, int col, const UINT8 *bitmap, UINT16 height)
