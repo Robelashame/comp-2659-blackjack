@@ -141,9 +141,7 @@ void plot_square(UINT32 *base, int row, int col, UINT16 side)
 }
 
 void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 height, UINT8 direction)
-{
-    void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 height, UINT8 direction)
-{   
+{  
     int base_ex, base_ey, height_ex, height_ey;
     int minRow = row, maxRow = row, minCol = col, maxCol = col;
     /* top left corner = base to the right and height down */
@@ -187,7 +185,7 @@ void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 
     plot_line(base, row, col, base_ey, base_ex);
     plot_line(base, row, col, height_ey, height_ex);
     plot_line(base, base_ey, base_ex, height_ey, height_ex);
-}
+    
 }
 
 void plot_8bit_bitmap(UINT8 *base, int row, int col, const UINT8 *bitmap, UINT16 height)
