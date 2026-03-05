@@ -8,10 +8,23 @@ const UINT8 bitmap8[] = {
 };
 
 /* 16x10 Diamond shape */
-const UINT16 bitmap16[] = {
+const UINT16 diamond[] = {
     0x0180, 0x03C0, 0x07E0, 0x0FF0, 0x1FF8, 
     0x1FF8, 0x0FF0, 0x07E0, 0x03C0, 0x0180
 };
+
+/* 16x16 Spade shape */
+const UINT16 spade[] = {
+    0x0000, 0x0180, 0x03c0, 0x07e0, 0x0ff0, 0x1ff8, 0x1ff8, 0x1ff8, 
+	0x1ff8, 0x0ff0, 0x0180, 0x03c0, 0x03c0, 0x07e0, 0x0000, 0x0000
+};
+
+/* 16x16 Heart shape */
+const UINT16 heart[] = {
+    0x0000, 0x3c3c, 0x7e7e, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 
+	0xffff, 0xffff, 0x7ffe, 0x3ffc, 0x1ff8, 0x0ff0, 0x07e0, 0x03c0
+};
+
 
 /* 32x10 Downward Arrow */
 const UINT32 bitmap32[] = {
@@ -32,7 +45,12 @@ int main()
 	plot_string(base, 50, 50, "Monkey!");
 
 	plot_8bit_bitmap(base, 20, 20, bitmap8, 8);
-	plot_16bit_bitmap((UINT16 *)base, 20, 50, bitmap16, 10);
+	plot_16bit_bitmap((UINT16 *)base, 20, 50, spade, 16);
+	plot_16bit_bitmap((UINT16 *)base, 110, 54, heart, 16);
+	plot_character(base, 102, 59, 'A');
+	plot_character(base, 1020, 610, 'A');
+	plot_rectangle(base, 100, 50, 200, 100);
+	plot_16bit_bitmap((UINT16 *)base, 20, 80, diamond, 10);
 	plot_32bit_bitmap((UINT32 *)base, 50, 100, bitmap32, 10);
 	
 	/*
