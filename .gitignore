@@ -53,7 +53,3 @@ dkms.conf
 
 # debug information files
 *.dwo
-
-
-#Mac thingy
-**/.DS_Store
