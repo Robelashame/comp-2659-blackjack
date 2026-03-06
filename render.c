@@ -45,12 +45,12 @@ void render_player(const Player *player, UINT8 *base) {
     char value_int[10];
     char bet_int[10];
 
-    // convert integers to strings
+    /* convert integers to strings */
     sprintf(bank_int, "%d", player->bank);
     sprintf(value_int, "%d", player->hand.value);
     sprintf(bet_int, "%d", player->total_bet);
 
-    // append the numbers to the text
+    /*append the numbers to the text */
     strcat(bank, bank_int);
     strcat(value, value_int);
     strcat(bet, bet_int);
@@ -69,8 +69,8 @@ void render_dealer(const Dealer *dealer, UINT8 *base) {
     sprintf(value_int, "%d", dealer->hand.value);
     strcat(value, value_int);
 
-    render_card(dealer->hidden_card, base);
-    render_hand(dealer->hand, base);
+    render_card(&dealer->hidden_card, base);
+    render_hand(&dealer->hand, base);
     
     plot_string(base, dealer->position[0] + 20, dealer->position[1], value);
 }
@@ -79,10 +79,10 @@ void render_timer(const Timer *timer, UINT8 *base) {
     char timer_str[20] = "Seconds Left: ";
     char seconds_int[10];
 
-    // convert integer seconds to string
+    /* convert integer seconds to string */
     sprintf(seconds_int, "%d", timer->seconds);
 
-    // append the number to the string
+    /* append the number to the string */
     strcat(timer_str, seconds_int);
 
     plot_string(base, 200, 300, timer_str);
