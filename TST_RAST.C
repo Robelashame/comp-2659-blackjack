@@ -41,6 +41,26 @@ int main()
 	printf("Clear Screen");
 	Cnecin();
 	clear_screen(base);
+
+	Cnecin();
+	plot_pixel(base, 0, 0);
+	plot_pixel(base, 399, 0);
+	plot_pixel(base, 0, 599);
+	plot_pixel(base, 399, 599);
+
+	Cincin();
+	clear_screen(base);
+
+	Cnecin();
+	plot_pixel(base, -1, 0)
+	plot_pixel(base, 0, -1)
+	plot_pixel(base, 400, 0)
+	plot_pixel(base, 0, 600)
+
+	Cincin();
+	clear_screen(base);
+
+	/*
 	plot_character(base, 0, 0, 'a');
 	plot_string(base, 50, 50, "Monkey!");
 
@@ -52,7 +72,7 @@ int main()
 	plot_rectangle(base, 100, 50, 200, 100);
 	plot_16bit_bitmap((UINT16 *)base, 20, 80, diamond, 10);
 	plot_32bit_bitmap((UINT32 *)base, 50, 100, bitmap32, 10);
-	
+	*/
 	/*
 	printf("\033f");
 	fflush(stdout);
@@ -75,7 +95,6 @@ int main()
 
 	plot_vertical_line(base, 10, 10, 100);
 	Cnecin();
-	
 	*/
 
 	return 0;
