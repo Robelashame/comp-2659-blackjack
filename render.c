@@ -3,6 +3,9 @@
 #include "stdio.h"
 
 void render_card(const Card *card, UINT8 *base) {
+    char rank[10];
+    char suit[10];
+    
     if (card->is_flipped) {
         clear_region(base, card->position[0], card->position[1], 80, 55);
         plot_rectangle(base, card->position[0], card->position[1], 80, 55);
@@ -10,8 +13,6 @@ void render_card(const Card *card, UINT8 *base) {
         return;
     }
 
-    char rank[10];
-    char suit[10];
     strcpy(rank, card->rank);
     strcpy(suit, card->suit);
     clear_region(base, card->position[0], card->position[1], 80, 55);
@@ -46,8 +47,8 @@ void render_player(const Player *player, UINT8 *base) {
 
     // convert integers to strings
     sprintf(bank_int, "%d", player->bank);
-    sprintf(value_int, "%d", player->value);
-    sprintf(bet_int, "%d", player->bet);
+    sprintf(value_int, "%d", player->hand.value);
+    sprintf(bet_int, "%d", player->total_bet);
 
     // append the numbers to the text
     strcat(bank, bank_int);
@@ -87,7 +88,7 @@ void render_timer(const Timer *timer, UINT8 *base) {
     plot_string(base, 200, 300, timer_str);
 }
 
-void render(const Model *model, *base) {
+void render(const Model *model, UINT8 *base) {
     render_dealer(&model->dealer, base);
     render_player(&model->player1, base);
     if (model->is_there_player2)

@@ -8,7 +8,7 @@
 
 void render(const Model *model, UINT8 *base);
 
-void render_player(const Player *player, UINT *base);
+void render_player(const Player *player, UINT8 *base);
 
 void render_hand(const Hand *hand, UINT8 *base);
 
