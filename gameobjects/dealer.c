@@ -1,16 +1,17 @@
 #include "dealer.h"
 
 void show_hidden(Dealer *dealer) {
-    dealer->is_showing_hidden = true;
+    dealer->is_showing_hidden = TRUE;
     add_card(&dealer->hand, &dealer->hidden_card);
 }
 
 void dealer_play(Dealer *dealer, Deck *shoe) {
-    
+    Card dealt_card;
+
     add_card(&dealer->hand, &dealer->hidden_card);
 
     while (dealer->hand.value < 17){
-        Card dealt_card = deal(shoe);
+        dealt_card = deal(shoe);
         add_card(&dealer->hand, &dealt_card);
     }
     

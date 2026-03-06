@@ -7,8 +7,8 @@
 #include "card.h"
 
 typedef struct {
-    Card cards[CARDS_PER_DECK * NUMBER_OF_DECKS]; //6 standard decks
-    int top; //index for top
+    Card cards[CARDS_PER_DECK * NUMBER_OF_DECKS]; /* 6 standard decks */
+    int top; /*index for top */
 } Deck;
 
 void initialize_deck(Deck *deck);

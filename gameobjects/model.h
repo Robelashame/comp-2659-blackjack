@@ -12,12 +12,12 @@ typedef struct {
     Dealer dealer;
     Deck deck;
     Timer timer;
-    bool is_there_player2;
-    bool player1_turn;
-    bool player2_turn;
-    bool dealer_turn;
-    bool is_round_over;
-    bool is_game_over;
+    int is_there_player2;
+    int player1_turn;
+    int player2_turn;
+    int dealer_turn;
+    int is_round_over;
+    int is_game_over;
 } Model;
 
 void new_round(Model *game);
@@ -26,6 +26,6 @@ void initialize_game(Model *game);
 
 void give_start_cards(Model *game);
 
-void two_players(Model *game, bool is_there_plr_2);
+void two_players(Model *game, int is_there_plr_2);
 
 #endif
