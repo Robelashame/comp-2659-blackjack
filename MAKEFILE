@@ -1,8 +1,0 @@
-CC = cc68x
-CFLAGS = -g
-
-SRC = $(wildcard *.c)
-OBJ = $(SRC:.c=.o)
-
-testren: $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o testren
