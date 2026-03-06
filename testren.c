@@ -1,12 +1,18 @@
+#include <osbind.h>
 #include "render.h"
+#include <stdio.h>
 
-Model model;
+Model game;
 
 int main() {
 
     void *base = Physbase();
 
-    Model *game = &model;
+	printf("\033f");
+	fflush(stdout);
+	printf("Clear Screen");
+	Cnecin();
+	clear_screen(base);
     initialize_game(game);
     render_dealer(&game->dealer, base);
     render_player(&game->player1, base);
