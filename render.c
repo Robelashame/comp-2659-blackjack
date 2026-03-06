@@ -9,7 +9,7 @@ void render_card(const Card *card, UINT8 *base) {
     if (card->is_flipped) {
         clear_region(base, card->position[0], card->position[1], 80, 55);
         plot_rectangle(base, card->position[0], card->position[1], 80, 55);
-        plot_string(base, card->position[0] + 40, card->position[1] + 20, "FLIPED");
+        plot_string(base, card->position[0] + 40, card->position[1] + 20, "FLIPPED");
         return;
     }
 
@@ -17,7 +17,7 @@ void render_card(const Card *card, UINT8 *base) {
     strcpy(suit, card->suit);
     clear_region(base, card->position[0], card->position[1], 80, 55);
     plot_rectangle(base, card->position[0], card->position[1], 80, 55);
-    plot_character(base, (card->position[0] + 2), (card->position[1] + 9), rank[0]);
+    plot_string(base, (card->position[0] + 2), (card->position[1] + 9), rank);
     if (!(strcmp(suit, "D")))
        	plot_16bit_bitmap((UINT16 *)base, (card->position[0] + 10), (card->position[1] + 4), diamond, 16);
     if (!(strcmp(suit, "H")))
