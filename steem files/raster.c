@@ -98,8 +98,8 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
     y1 = end_row;
 
     /* difference between points, or the displacement between them */
-    dy = y1 - y0
-    dx = x1 - x0
+    dy = y1 - y0;
+    dx = x1 - x0;
 
     if (dy < 0) dy = -dy;
     if (dx < 0) dx = -dx;

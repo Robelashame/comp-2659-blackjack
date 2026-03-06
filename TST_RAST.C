@@ -52,10 +52,10 @@ int main()
 	clear_screen(base);
 
 	Cnecin();
-	plot_pixel(base, -1, 0)
-	plot_pixel(base, 0, -1)
-	plot_pixel(base, 400, 0)
-	plot_pixel(base, 0, 600)
+	plot_pixel(base, -1, 0);
+	plot_pixel(base, 0, -1);
+	plot_pixel(base, 400, 0);
+	plot_pixel(base, 0, 600);
 
 	Cincin();
 	clear_screen(base);

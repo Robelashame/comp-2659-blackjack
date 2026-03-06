@@ -38,27 +38,90 @@ int main()
 
 	printf("\033f");
 	fflush(stdout);
-	printf("Clear Screen");
+	/*
+	clear_region(base, 50, 50, 16, 250);
+	plot_string(base, 50, 50, "Press any key to clear screen.");
 	Cnecin();
 	clear_screen(base);
 
+	plot_string(base, 50, 50, "Testing plot_pixel");
 	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
 	plot_pixel(base, 0, 0);
 	plot_pixel(base, 399, 0);
-	plot_pixel(base, 0, 599);
-	plot_pixel(base, 399, 599);
-
-	Cincin();
+	plot_pixel(base, 0, 639);
+	plot_pixel(base, 399, 639);
+	plot_pixel(base, 200, 320);
+	Cnecin();
+	
+	clear_region(base, 50, 50, 16, 250);
+	plot_string(base, 50, 50, "Press any key to clear screen.");
+	Cnecin();
 	clear_screen(base);
+
+	plot_string(base, 50, 50, "Error bounds");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+	plot_pixel(base, -1, 0);
+	plot_pixel(base, 0, -1);
+	plot_pixel(base, 400, 0);
+	plot_pixel(base, 0, 640);
 
 	Cnecin();
-	plot_pixel(base, -1, 0)
-	plot_pixel(base, 0, -1)
-	plot_pixel(base, 400, 0)
-	plot_pixel(base, 0, 600)
+	plot_string(base, 50, 50, "Testing clear_region");
+	plot_string(base, 66, 50, "abcdefghijklmnopqrstuvwxyz");
 
-	Cincin();
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+	Cnecin();
+	clear_region(base, 50, 50, 32, 100);
+	Cnecin();
+	clear_region(base, 50, 100, 32, 100);
+	Cnecin();
+	clear_region(base, 50, 150, 32, 120);
+	Cnecin();
+	
+	plot_string(base, 50, 50, "Testing plot_horizontal_line");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_string(base, 50, 50, "Normal lines");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_horizontal_line(base, 0, 0, 100);
+	plot_horizontal_line(base, 100, 0, 100);
+	plot_horizontal_line(base, 150, 0, 640);
+	plot_horizontal_line(base, 200, 320, 100);
+	plot_horizontal_line(base, 399, 220, 100);
+	Cnecin();
+
+	plot_string(base, 50, 50, "Clipping lines");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_horizontal_line(base, 250, 320, 400);
+	plot_horizontal_line(base, 300, 320, 350);
+	*/
+	Cnecin();
 	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_vertical_line");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_vertical_line(base, 0, 0, 200);
+	plot_vertical_line(base, 100, 320, 200);
+	plot_vertical_line(base, 0, 639, 200);
+	plot_vertical_line(base, 300, 0, 200);
+	plot_vertical_line(base, 300, 639, 300);
+
+	Cnecin();
+	clear_screen(base);
+	
+	plot_string(base, 50, 50, "Testing plot_line");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
 
 	/*
 	plot_character(base, 0, 0, 'a');
