@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "raster.h"
-#include "gameobjects/model.h"
+#include "model.h"
 #include "bmaps.h"
 
 void render(const Model *model, UINT8 *base);

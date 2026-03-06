@@ -1,14 +1,8 @@
-tst_rast: tst_rast.o raster.o rast_asm.o font.o
-	cc68x -g tst_rast.o raster.o rast_asm.o font.o -o tst_rast
+CC = cc68x
+CFLAGS = -g
 
-tst_rast.o: tst_rast.c raster.h
-	cc68x -g -c tst_rast.c
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
 
-raster.o: raster.c raster.h font.h
-	cc68x -g -c raster.c
-
-rast_asm.o: rast_asm.s
-	gen -D -L2 rast_asm.s
-
-font.o: font.c font.h
-	cc68x -g -c font.c
+testren: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o testren

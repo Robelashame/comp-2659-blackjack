@@ -30,10 +30,10 @@ void initialize_game(Model *game) {
     game->dealer.position[0] = 20;
     game->dealer.position[1] = 280;
 
-    memccpy(game->dealer.hand.position, game->dealer.position, sizeof(game->dealer.position));
-    memccpy(game->player1.hand.position, game->player1.hand_position, sizeof(game->player1.hand_position));
+    memcpy(game->dealer.hand.position, game->dealer.position, sizeof(game->dealer.position));
+    memcpy(game->player1.hand.position, game->player1.hand_position, sizeof(game->player1.hand_position));
     if (game->is_there_player2)
-            memccpy(game->player2.hand.position, game->player2.hand_position, sizeof(game->player2.hand_position));
+            memcpy(game->player2.hand.position, game->player2.hand_position, sizeof(game->player2.hand_position));
 
 
     give_start_cards(game);
