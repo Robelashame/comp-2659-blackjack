@@ -6,6 +6,7 @@ typedef struct {
     char suit[10];
     int value;
     int position[2];
+    int is_flipped;
 } Card;
 
 void set_value(Card *card);

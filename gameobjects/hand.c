@@ -30,6 +30,7 @@ void add_card(Hand *hand, Card *card) {
     hand->num_of_cards++;
 
     hand->value = calculate_hand_value(hand);
+    hand->cards[(hand->num_of_cards - 1)].position[1] += ((hand->num_of_cards - 1) * 25);
 }
 
 int is_blackjack(Hand *hand) {

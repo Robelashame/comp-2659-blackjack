@@ -9,6 +9,7 @@ typedef struct {
     Hand hand;
     Card hidden_card;
     int is_showing_hidden;
+    int position[2];
 } Dealer;
 
 void dealer_play(Dealer *dealer, Deck *shoe);

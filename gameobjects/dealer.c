@@ -19,4 +19,6 @@ void dealer_play(Dealer *dealer, Deck *shoe) {
 
 void add_hidden_card(Dealer *dealer, Card *card) {
     dealer->hidden_card = (*card);
+    dealer->hidden_card.position[0] = 30;
+    dealer->hidden_card.position[1] = 220;
 }
