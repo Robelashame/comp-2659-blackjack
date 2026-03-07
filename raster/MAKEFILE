@@ -1,3 +1,5 @@
+#if the make file dosent work, remove rast_asm from the make
+
 tst_rast: tst_rast.o raster.o rast_asm.o font.o
 	cc68x -g tst_rast.o raster.o rast_asm.o font.o -o tst_rast
 
