@@ -2,14 +2,10 @@
 #include <stdio.h>
 
 void test_two_player(Model *game) {
-    int player_count;
-    printf("Press 1 for player 2: ");
-    scanf("%d", &player_count);
-    if (player_count == 1) {
-        game->is_there_player2 = TRUE;
+    
+    if (game->is_there_player2 == 1) {
         printf("Game will have 2 players(but im not showing it just trust me)\n");
     } else {
-        game->is_there_player2 = FALSE;
         printf("Game will have 1 player\n");
     }
 }
@@ -18,7 +14,7 @@ void test_game_start(Model *game) {
     Hand *plr_1_hand;
     Dealer *game_dealer;
     Deck *shoe;
-    
+
     initialize_game(game);
 
     test_two_player(game);

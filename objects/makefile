@@ -1,4 +1,4 @@
-//Copy the below into Makefile for the objects for atari, leave same for this one.
+#Copy the below into Makefile for the objects for atari, leave same for this one.
 testmo: test.o testmo.o model.o player.o dealer.o deck.o hand.o card.o timer.o asynch.o cond.o
 	cc68x -g test.o testmo.o model.o player.o dealer.o deck.o hand.o card.o timer.o asynch.o cond.o -o testmo
 

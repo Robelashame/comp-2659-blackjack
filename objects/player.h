@@ -9,6 +9,7 @@ typedef struct {
     int total_bet;
     Hand hand;
     int active_turn;
+    int hand_position[2];
 } Player;
 
 void hit_plr(Player *player, Deck *shoe);

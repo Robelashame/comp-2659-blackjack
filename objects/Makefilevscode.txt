@@ -1,5 +1,6 @@
-#this is for the testmodel test.c maybe i shoulda named it better but whatever
+#this is for the testmodel test.c in vs code, there is one for steem emulator just rename to makefile
 CC = clang
+
 CFLAGS = -Wall -Wextra -std=c11
 
 TARGET = test

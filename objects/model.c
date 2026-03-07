@@ -3,14 +3,38 @@
 #include <stdio.h>
 
 void initialize_game(Model *game) {
-    printf("before memset\n");
+    int player_count;
+    
     memset(game, 0, sizeof(Model));
-    printf("after memset\n");
     initialize_deck(&game->deck);
     shuffle(&game->deck);
 
+    printf("Press 1 for player 2: ");
+    scanf("%d", &player_count);
+
+    two_players(game,player_count);
+
     game->player1.bank = 1000;
     game->player2.bank = 1000;
+
+    if (game->is_there_player2 == TRUE) {
+        game->player1.hand_position[0] = 265;
+        game->player1.hand_position[1] = 35;
+        game->player2.hand_position[0] = 265;
+        game->player2.hand_position[1] = 355;
+    } else {
+        game->player1.hand_position[0] = 265;
+        game->player1.hand_position[1] = 280;
+    }
+
+    game->dealer.position[0] = 20;
+    game->dealer.position[1] = 280;
+
+    memcpy(game->dealer.hand.position, game->dealer.position, sizeof(game->dealer.position));
+    memcpy(game->player1.hand.position, game->player1.hand_position, sizeof(game->player1.hand_position));
+    if (game->is_there_player2)
+            memcpy(game->player2.hand.position, game->player2.hand_position, sizeof(game->player2.hand_position));
+
 
     give_start_cards(game);
 
@@ -41,7 +65,10 @@ void new_round(Model *game) {
 }
 
 void two_players(Model *game, int is_there_plr_2) {
-    game->is_there_player2 = is_there_plr_2;
+    if  (is_there_plr_2 == 1)
+        game->is_there_player2 = is_there_plr_2;
+    else
+        game->is_there_player2 = FALSE;
 }
 
 void give_start_cards(Model *game) {

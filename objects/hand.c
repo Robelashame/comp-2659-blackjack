@@ -1,4 +1,5 @@
 #include "hand.h"
+#include <string.h>
 
 int calculate_hand_value(Hand *hand) {
     int value;
@@ -30,6 +31,8 @@ void add_card(Hand *hand, Card *card) {
     hand->num_of_cards++;
 
     hand->value = calculate_hand_value(hand);
+    hand->cards[index].position[0] = hand->position[0];
+    hand->cards[index].position[1] = hand->position[1] + (index * 25);
 }
 
 int is_blackjack(Hand *hand) {
