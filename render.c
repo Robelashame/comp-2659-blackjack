@@ -6,10 +6,10 @@ void render_card(const Card *card, UINT8 *base) {
     char rank[10];
     char suit[10];
     
-    if (card->is_flipped) {
+    if (card->is_hidden) {
         clear_region(base, card->position[0], card->position[1], 80, 55);
         plot_rectangle(base, card->position[0], card->position[1], 80, 55);
-        plot_string(base, card->position[0] + 40, card->position[1] + 20, "FLIPPED");
+        plot_string(base, card->position[0] + 40, card->position[1], "HIDDEN");
         return;
     }
 
@@ -72,7 +72,7 @@ void render_dealer(const Dealer *dealer, UINT8 *base) {
     render_card(&dealer->hidden_card, base);
     render_hand(&dealer->hand, base);
     
-    plot_string(base, dealer->position[0] + 20, dealer->position[1], value);
+    plot_string(base, dealer->position[0] - 20, dealer->position[1], value);
 }
 
 void render_timer(const Timer *timer, UINT8 *base) {

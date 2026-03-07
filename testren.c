@@ -10,10 +10,10 @@ int main() {
 
 	printf("\033f");
 	fflush(stdout);
-	printf("Clear Screen");
 	Cnecin();
 	clear_screen(base);
     initialize_game(&game);
+    clear_screen(base);
     render_dealer(&game.dealer, base);
     render_player(&game.player1, base);
     if (game.is_there_player2 == TRUE)
