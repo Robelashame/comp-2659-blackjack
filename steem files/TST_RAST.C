@@ -38,7 +38,7 @@ int main()
 
 	printf("\033f");
 	fflush(stdout);
-	/*
+
 	clear_region(base, 50, 50, 16, 250);
 	plot_string(base, 50, 50, "Press any key to clear screen.");
 	Cnecin();
@@ -102,7 +102,7 @@ int main()
 
 	plot_horizontal_line(base, 250, 320, 400);
 	plot_horizontal_line(base, 300, 320, 350);
-	*/
+	
 	Cnecin();
 	clear_screen(base);
 
@@ -118,47 +118,152 @@ int main()
 
 	Cnecin();
 	clear_screen(base);
-	
+
 	plot_string(base, 50, 50, "Testing plot_line");
 	Cnecin();
 	clear_region(base, 50, 50, 16, 250);
 
-	/*
-	plot_character(base, 0, 0, 'a');
-	plot_string(base, 50, 50, "Monkey!");
-
-	plot_8bit_bitmap(base, 20, 20, bitmap8, 8);
-	plot_16bit_bitmap((UINT16 *)base, 20, 50, spade, 16);
-	plot_16bit_bitmap((UINT16 *)base, 110, 54, heart, 16);
-	plot_character(base, 102, 59, 'A');
-	plot_character(base, 1020, 610, 'A');
-	plot_rectangle(base, 100, 50, 200, 100);
-	plot_16bit_bitmap((UINT16 *)base, 20, 80, diamond, 10);
-	plot_32bit_bitmap((UINT32 *)base, 50, 100, bitmap32, 10);
-	*/
-	/*
-	printf("\033f");
-	fflush(stdout);
-	printf("Clear Region 10x10");
-	Cnecin();
-	clear_region(base, 0, 0, 10, 10);
-	
-
-	printf("\033f");
-	fflush(stdout);
-	printf("Plot Pixel 50x50");
-	plot_pixel(base, 50, 50);
+	plot_line(base, 100, 100, 200, 200);
+	plot_line(base, 200, 200, 100, 300);
+	plot_line(base, 50, 300, 200, 350);
 	Cnecin();
 
-	plot_pixel(base, 100, 100);
+	plot_line(base, -50, 50, 100, 100);
+	plot_line(base, 350, 500, 450, 650);
+
+	Cnecin();
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_rectangle");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_rectangle(base, 100, 100, 50, 120);
+	plot_rectangle(base, 200, 250, 80, 160);
+	plot_rectangle(base, 50, 500, 40, 80);
 	Cnecin();
 
-	plot_horizontal_line(base, 10, 10, 100);
+	plot_rectangle(base, 50, -20, 50, 100);
+	plot_rectangle(base, 350, 200, 80, 120);
+
+	Cnecin();
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_square");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_square(base, 120, 120, 40);
+	plot_square(base, 200, 300, 60);
+	plot_square(base, 80, 450, 50);
 	Cnecin();
 
-	plot_vertical_line(base, 10, 10, 100);
+	plot_square(base, 50, -20, 60);
+	plot_square(base, 350, 200, 80);
+
 	Cnecin();
-	*/
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_triangle");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_triangle(base, 150, 150, 60, 60, 0);
+	plot_triangle(base, 150, 300, 60, 60, 1);
+	plot_triangle(base, 300, 150, 60, 60, 2);
+	plot_triangle(base, 300, 300, 60, 60, 3);
+	Cnecin();
+
+	plot_triangle(base, 50, 50, 80, 80, 3);
+
+	Cnecin();
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_8bit_bitmap");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_8bit_bitmap(base, 100, 100, bitmap8, 8);
+	plot_8bit_bitmap(base, 100, 200, bitmap8, 8);
+	plot_8bit_bitmap(base, 200, 300, bitmap8, 8);
+	Cnecin();
+
+	plot_8bit_bitmap(base, 50, -4, bitmap8, 8);
+
+	Cnecin();
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_16bit_bitmap");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_16bit_bitmap(base, 100, 100, diamond, 10);
+	plot_16bit_bitmap(base, 150, 250, spade, 16);
+	plot_16bit_bitmap(base, 200, 400, heart, 16);
+	Cnecin();
+
+	plot_16bit_bitmap(base, 50, -8, diamond, 10);
+
+	Cnecin();
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_32bit_bitmap");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_32bit_bitmap(base, 100, 100, bitmap32, 10);
+	plot_32bit_bitmap(base, 150, 250, bitmap32, 10);
+	plot_32bit_bitmap(base, 200, 400, bitmap32, 10);
+	Cnecin();
+
+	plot_32bit_bitmap(base, 50, -16, bitmap32, 10);
+
+	Cnecin();
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_character");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_character(base, 100, 100, 'A');
+	plot_character(base, 100, 120, 'B');
+	plot_character(base, 100, 140, '7');
+	Cnecin();
+
+	plot_character(base, 0, 0, 'X');
+
+	Cnecin();
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Testing plot_string");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_string(base, 120, 100, "Hello");
+	plot_string(base, 160, 100, "Raster test");
+	plot_string(base, 200, 100, "Blackjack");
+	Cnecin();
+
+	plot_string(base, 250, 580, "Edge Case");
+
+	Cnecin();
+	clear_screen(base);
+
+	plot_string(base, 50, 50, "Final raster demo");
+	Cnecin();
+	clear_region(base, 50, 50, 16, 250);
+
+	plot_rectangle(base, 40, 40, 80, 140);
+	plot_square(base, 60, 250, 60);
+	plot_triangle(base, 250, 120, 80, 80, 0);
+	plot_line(base, 50, 550, 200, 620);
+	plot_16bit_bitmap(base, 180, 350, diamond, 10);
+	plot_string(base, 340, 300, "Done");
+
+	Cnecin();
+	clear_region(base, 150, 330, 80, 120);
+	Cnecin();
+	clear_screen(base);
 
 	return 0;
 }
