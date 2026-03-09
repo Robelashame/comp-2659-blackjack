@@ -2,8 +2,8 @@
 #define RENDER_H
 
 #include "types.h"
-#include "../raster/raster.h"
-#include "../objects/model.h"
+#include "raster.h"
+#include "model.h"
 #include "bmaps.h"
 
 void render(const Model *model, UINT8 *base);
