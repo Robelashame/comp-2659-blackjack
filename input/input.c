@@ -2,7 +2,7 @@
 
 int has_input() 
 {
-    return (Cconis() != 0 ? 1 : 0);
+    return Cconis() != 0;
 }
 
 char get_input()
