@@ -2,6 +2,16 @@
 #include "string.h"
 #include "stdio.h"
 
+void *front_buffer = Physbase();
+UINT32 *back_buffer = (UINT32 *) malloc((SCREEN_WIDTH * (SCREEN_HEIGHT + 20)) / 8);
+
+void swap_buffer() {
+    UINT32 *temp = (UINT32 *)front_buffer
+    *front_buffer = *back_buffer;
+    *back_buffer = *temp
+    Setscreen(-1, *front_buffer, -1);
+}
+
 void render_card(const Card *card, UINT8 *base) {
     char rank[10];
     char suit[10];
@@ -45,6 +55,9 @@ void render_player(const Player *player, UINT8 *base) {
     char value_int[10];
     char bet_int[10];
 
+    /* swap frame buffers*/
+    swap_buffer();
+
     /* convert integers to strings */
     sprintf(bank_int, "%d", player->bank);
     sprintf(value_int, "%d", player->hand.value);
@@ -66,6 +79,8 @@ void render_dealer(const Dealer *dealer, UINT8 *base) {
     char value[20] = "Value: ";
     char value_int[10];
 
+    swap_buffer();
+
     sprintf(value_int, "%d", dealer->hand.value);
     strcat(value, value_int);
 
@@ -78,6 +93,8 @@ void render_dealer(const Dealer *dealer, UINT8 *base) {
 void render_timer(const Timer *timer, UINT8 *base) {
     char timer_str[20] = "Seconds Left: ";
     char seconds_int[10];
+
+    swap_buffer();
 
     /* convert integer seconds to string */
     sprintf(seconds_int, "%d", timer->seconds);
