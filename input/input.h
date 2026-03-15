@@ -10,7 +10,7 @@
 
  INPUT: None
 
- OUTPUT: Returns a non-zero number for true and 0 for false.
+ OUTPUT: Returns a 1 for true or 0 for false.
 */
 bool has_input();
 
