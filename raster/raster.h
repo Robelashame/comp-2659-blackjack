@@ -88,7 +88,7 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
 
  INPUT: Address(UINT32*): to the start of the screen
         Position(row,col): the coordinates of the top left pixel of the rectangle
-        Length: the lenth (number of rows) in pixels of the rectangle
+        Length: the length (number of rows) in pixels of the rectangle
         Width: the width (number of columns) in pixels of the rectangle
 
  OUTPUT: None
@@ -116,7 +116,7 @@ void plot_square(UINT32 *base, int row, int col, UINT16 side);
  INPUT: Address(UINT32*): to the start of the screen
         Position(row,col): the coordinates of the pixel of the 90° angle of the triangle
         Base: the length (number of columns) of the base in pixels of the triangle
-        Height: the lenth (number of rows) of the height in pixels of the triangle
+        Height: the length (number of rows) of the height in pixels of the triangle
         Direction: Describes where the coordinate is relative to the rest of the triangle
               0 - Coordinate is the top left point of the triangle
               1 - Coordinate is the top right point of the triangle

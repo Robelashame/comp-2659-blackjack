@@ -23,7 +23,6 @@
 void clear_screen(UINT32 *base)
 {
     int i;
-    /* UINT32 is 4 bytes, so divide by 4 */
     for(i = 0; i < (SCREEN_BYTES/4); i++)
     {
         base[i] = 0x00000000;
@@ -58,7 +57,7 @@ void clear_region(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 
 void plot_pixel(UINT8 *base, int row, int col)
 {
-    /* returns early if out of bounds, allowed for clipping and any other function off this won't require bound checks */
+    /* returns early if out of bounds */
     if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH) return;
     *(base + row * SCREEN_WIDTH_BYTES + (col >> 3)) |= 1 << (7 - (col & 7));
 }
@@ -93,9 +92,14 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
     UINT8 *base8 = (UINT8 *)base;
     int x0, x1, y0, y1, dx, dy, sx, sy, err, e2;
 
+    x0 = start_col;
+    x1 = end_col;
+    y0 = start_row;
+    y1 = end_row;
+
     /* difference between points, or the displacement between them */
-    dy = y1 - y0
-    dx = x1 - x0
+    dy = y1 - y0;
+    dx = x1 - x0;
 
     if (dy < 0) dy = -dy;
     if (dx < 0) dx = -dx;

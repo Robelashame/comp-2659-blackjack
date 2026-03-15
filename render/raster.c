@@ -1,6 +1,7 @@
 #include "raster.h"
 #include "types.h"
 #include "font.h"
+#include <stdlib.h>
 
 #define SCREEN_BYTES 32000
 #define SCREEN_WIDTH 640
@@ -22,7 +23,7 @@
 void clear_screen(UINT32 *base)
 {
     int i;
-    for(i = 0; i < SCREEN_BYTES; i++)
+    for(i = 0; i < (SCREEN_BYTES/4); i++)
     {
         base[i] = 0x00000000;
     }
@@ -56,6 +57,7 @@ void clear_region(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 
 void plot_pixel(UINT8 *base, int row, int col)
 {
+    /* returns early if out of bounds */
     if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH) return;
     *(base + row * SCREEN_WIDTH_BYTES + (col >> 3)) |= 1 << (7 - (col & 7));
 }
@@ -80,7 +82,11 @@ void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
     }
 }
 
-/* Bresenham’s Algorithm, idk it works but im using it cause it works :D */
+/* Bresenham’s Algorithm */
+/* Bresenham calculates the ideal mathematical line and keeps math to only interger addition and subtraction, no floats so math is faster */
+/* Instead of calculating the slope each time, we calculate the error, this tells us how much we are above or below the true line */
+/* if dy = 1, and dx = 2, slope = 1/2 = 0.5, which means for every 2 steps in x, we take 1 step in y, but instead we use 0-2 so no float numbers*/
+/*  */
 void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_col)
 {
     UINT8 *base8 = (UINT8 *)base;
@@ -91,31 +97,34 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
     y0 = start_row;
     y1 = end_row;
 
-    /* difference between points, or the length between them */
-    dy = abs(y1 - y0);
-    dx = abs(x1 - x0);
+    /* difference between points, or the displacement between them */
+    dy = y1 - y0;
+    dx = x1 - x0;
+
+    if (dy < 0) dy = -dy;
+    if (dx < 0) dx = -dx;
 
     /* step variable, determines whether the line steps left or right, up or down */
     sy = (y0 < y1) ? 1 : -1;
     sx = (x0 < x1) ? 1 : -1;
 
-
-    /* determines how off you are from the ideal line between points */
+    /* determines how off you are from the ideal line between points, + = horizontally off, - = vertically off */
     err = dx - dy;
 
     while(1) {
         plot_pixel(base8, y0, x0);
+        /* break after you reach you're desitination point */
         if (x0 == x1 && y0 == y1) break;
 
         /* 2*err, bresenham doesn't want to use fractions, so instead of checking the midpoint at 1/2 we check 1 which is between 0 and 2 */
         e2 = err << 1;
 
-        /*  */
+        /* checks if you haven't drifted too far vertically, then takes a step in x direction */
         if (e2 > -dy) {
             err -= dy;
             x0 += sx;
         } 
-        /*  */
+        /* checks if you haven't drifted too far horizontally, then takes a step in y direction */
         if (e2 < dx) {
         err += dx;
         y0 += sy;
@@ -125,8 +134,6 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
 
 void plot_rectangle(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 {
-    if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || row + length - 1 >= SCREEN_HEIGHT || col + width - 1 >= SCREEN_WIDTH) 
-        return;
     plot_vertical_line(base, row, col, length);
     plot_horizontal_line(base, row, col, width);
     plot_vertical_line(base, row, col + width - 1, length);
@@ -135,8 +142,6 @@ void plot_rectangle(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 
 void plot_square(UINT32 *base, int row, int col, UINT16 side)
 {
-    if (row < 0 || col < 0 || side == 0 || row + side > SCREEN_HEIGHT || col + side > SCREEN_WIDTH) 
-        return;
     plot_rectangle(base, row, col, side, side);
 }
 
@@ -169,23 +174,10 @@ void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 
         height_ex = col;
         height_ey = row - (height - 1);
     } else return;
-    
-    if (base_ey < minRow) minRow = base_ey;
-    if (base_ey > maxRow) maxRow = base_ey;
-    if (height_ey < minRow) minRow = height_ey;
-    if (height_ey > maxRow) maxRow = height_ey;
-
-    if (base_ex < minCol) minCol = base_ex;
-    if (base_ex > maxCol) maxCol = base_ex;
-    if (height_ex < minCol) minCol = height_ex;
-    if (height_ex > maxCol) maxCol = height_ex;  
-
-    if (minRow < 0 || minCol < 0 || maxRow >= SCREEN_HEIGHT || maxCol >= SCREEN_WIDTH) return;
 
     plot_line(base, row, col, base_ey, base_ex);
     plot_line(base, row, col, height_ey, height_ex);
     plot_line(base, base_ey, base_ex, height_ey, height_ex);
-    
 }
 
 void plot_8bit_bitmap(UINT8 *base, int row, int col, const UINT8 *bitmap, UINT16 height)
