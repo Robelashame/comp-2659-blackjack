@@ -2,6 +2,7 @@
 #define ASYNCH_H
 
 #include "model.h"
+#include "cond.h"
 
 void hit(Model *game);
 

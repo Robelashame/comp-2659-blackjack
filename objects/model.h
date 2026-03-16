@@ -22,7 +22,7 @@ typedef struct {
 
 void new_round(Model *game);
 
-void initialize_game(Model *game);
+void initialize_game(Model *game, int is_two_player);
 
 void give_start_cards(Model *game);
 

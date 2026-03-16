@@ -2,7 +2,7 @@
 #include "asynch.h"
 
 void start_game(Model *game) {
-    initialize_game(game);
+    initialize_game(game, 0);
 }
 
 void new_round_start(Model *game) {
@@ -15,6 +15,20 @@ void dealer_draws(Model *game) {
 }
 
 void player_turn_ends(Model *game) {
+    if (game ->player1_turn) {
+        game->player1_turn = 0;
+        if (game->is_there_player2) {
+            game->player2_turn = 1;
+        } else {
+            game->dealer_turn = 1;
+        }
+    } else if (game->player2_turn) {
+        game->player2_turn = 0;
+        game->dealer_turn = 1;
+    }
+}
+
+void player_bj_or_bust(Model *game) {
     if (game->player1_turn == TRUE) {
         if (is_blackjack(&game->player1.hand) || is_bust(&game->player1.hand)) {
             if (game->is_there_player2) {

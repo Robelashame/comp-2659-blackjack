@@ -2,17 +2,17 @@
 #include <string.h>
 #include <stdio.h>
 
-void initialize_game(Model *game) {
-    int player_count;
+void initialize_game(Model *game, int is_two_player) {
+    // int player_count;
     
     memset(game, 0, sizeof(Model));
     initialize_deck(&game->deck);
     shuffle(&game->deck);
 
-    printf("Press 1 for player 2: ");
-    scanf("%d", &player_count);
+    /* printf("Press 1 for player 2: ");
+    scanf("%d", &player_count); */
 
-    two_players(game,player_count);
+    two_players(game, is_two_player);
 
     game->player1.bank = 1000;
     game->player2.bank = 1000;
@@ -36,10 +36,8 @@ void initialize_game(Model *game) {
             memcpy(game->player2.hand.position, game->player2.hand_position, sizeof(game->player2.hand_position));
 
 
-    give_start_cards(game);
-
     initialize_timer(&game->timer, 60);
-    
+
     game->player1_turn = TRUE;
     game->player2_turn = FALSE;
     game->dealer_turn = FALSE;

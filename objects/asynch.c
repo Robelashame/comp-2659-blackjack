@@ -14,20 +14,7 @@ void hit(Model *game) {
 }
 
 void stand(Model *game) {
-    if (game->player1_turn == TRUE && game->is_there_player2 == TRUE) {
-        game->player1_turn = FALSE;
-        game->player2_turn = TRUE;
-    }
-
-    else if (game->player2_turn == TRUE) {
-        game->player2_turn = FALSE;
-        game->dealer_turn = TRUE;
-    }
-
-    else if (game->player1_turn == TRUE && game->is_there_player2 == FALSE) {
-        game->player1_turn = FALSE;
-        game->dealer_turn = TRUE;
-    }
+    player_turn_ends(game);
 }
 
 void increase_bet(Model *model) {
@@ -57,11 +44,17 @@ void decrease_bet(Model *model) {
 }
 
 void bet_confirmed(Model *model) {
-    if (model->player1_turn)
+    if (model->player1_turn) {
         model->player1.bank -= model->player1.total_bet;
-
-    else if (model->player2_turn)
+        if (model->is_there_player2) {
+            model->player1_turn = 0;
+            model->player2_turn = 1;
+        } else
+            new_round(model);
+    } else if (model->player2_turn) {
         model->player2.bank -= model->player2.total_bet;
+        new_round(model);
+    }
 }
 
 void quit(Model *game) {
