@@ -63,13 +63,82 @@ void plot_pixel(UINT8 *base, int row, int col)
     *(base + row * SCREEN_WIDTH_BYTES + (col >> 3)) |= 1 << (7 - (col & 7));
 }
 
+/* Horizontal line plotting by remainder division of the adress collum and masking the bytes based on the remainder of partial bytes.
+   This is done twice, once at the beginning of the line drawing and then at the end after filling in the whole bytes in the middle. */
+
 void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
 {
-    int i;
+    int i, bit_offset;
+    UINT8 mask;
+    UINT8 *cur_addr;
+    UINT16 remaining_pixels;
     UINT8 *byte_base = (UINT8 *)base;
-    for(i = 0; i < length; i++)
+    
+    /* Adress calculations and byte offset calculate, also take note of remaining pixels to draw. */
+
+    UINT8 *cur_addr = (byte_base + row * SCREEN_WIDTH_BYTES + (col >> 3));
+    remaining_pixels = length;
+    bit_offset = col & 7;
+    /* Out of bounds checking */
+    if(row < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || (col + length) <= 0 || length <= 0)
     {
-        plot_pixel(byte_base, row, col + i);
+        return;
+    }
+
+    if(col < 0)
+    {
+        length += col;
+        col = 0;
+    }
+
+    if((col + length) > SCREEN_WIDTH)
+    {
+        length = SCREEN_WIDTH - col;
+    }
+
+    if(length <= 0)
+    {
+        return;
+    }
+
+    /* Handle first partial byte writting */
+    /* If the remainder of the byte is not zero then a partial byte is needed to be masked.*/
+    if(bit_offset != 0)
+    {   
+        /* Edge case checking if the remaining pixels is less than the full byte, so it would write partially in the middle of the byte. */
+        if(remaining_pixels <= (8 - bit_offset))
+        {
+            mask = 0xFF >> bit_offset;
+            mask &= 0xFF << (8 - (bit_offset + remaining_pixels));
+            *cur_addr |= mask;
+            return;
+        }
+        /* Make a mask for the partial bits on the byte to be written. */
+        mask = 0xFF >> bit_offset;
+        *cur_addr |= mask;
+
+        /* Now decrement the amount of pixels needed to be written and move on to the next byte. */
+        
+        remaining_pixels -= (8 - bit_offset);
+        cur_addr++;
+    }
+    /* Handle full byte writting if a full byte is needed to be written. */
+    while(remaining_pixels >= 8)
+    {
+        *cur_addr = 0xFF;
+
+        /* Decrement the full byte that was written and move on to the next. Then keep writting full bytes. */
+        remaining_pixels -= 8;
+        cur_addr++;
+    }
+
+    /* Handle partial byte writting on the right end of the bits. */
+    if(remaining_pixels > 0)
+    {
+        /* Make a mask for the partial bits on the byte to be written.
+           After the bits are written that means the rest of the line is done. */
+        mask = 0xFF << (8 - remaining_pixels);
+        *cur_addr |= mask;
     }
 }
 
@@ -94,8 +163,8 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
     int x0, x1, y0, y1, dx, dy, sx, sy, err, e2;
 
     /* difference between points, or the displacement between them */
-    dy = y1 - y0
-    dx = x1 - x0
+    dy = y1 - y0;
+    dx = x1 - x0;
 
     if (dy < 0) dy = -dy;
     if (dx < 0) dx = -dx;
