@@ -7,7 +7,7 @@
 #define SCREEN_SIZE ((SCREEN_WIDTH * SCREEN_HEIGHT) / 8)
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 400
-#define ALIGNMENT 256
+#define ALIGNMENT 255
 
 static UINT8 *original_screen = 0;
 static UINT8 *front_buffer = 0;
@@ -24,9 +24,8 @@ static void init_buffer() {
         /* then we add 255 because if we round the memory address down without it, it can skip the address by 255 bytes */
         /* so we guarantee that when rounding down we are within our allocated size, which is also why we give it 255 more bytes when allocating */
         /* and then you round off the last 2 bytes since that will make it always a multiple of 256 */
-        back_buffer = (UINT8 *)(((long)raw_buffer + 255) & 0xFFFFFF00);
+        back_buffer = (UINT8 *)(((long)raw_buffer + ALIGNMENT) & 0xFFFFFF00);
     }
-    
 }
 
 static void swap_buffer() {
@@ -155,14 +154,9 @@ void render_timer(const Timer *timer, UINT8 *base) {
 }
 
 void render(const Model *model, UINT8 *base) {
-    init_buffer();
-    base = back_buffer;
-    clear_screen(base);
-    
     render_dealer(&model->dealer, base);
     render_player(&model->player1, base);
     if (model->is_there_player2) 
         render_player(&model->player2, base);
     render_timer(&model->timer, base);
-    swap_buffer();
 }
