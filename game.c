@@ -1,4 +1,5 @@
 #include <osbind.h>
+#include <stdlib.h> /* remove when moving db stuff */
 #include "model.h"
 #include "async.h"
 #include "cond.h"
@@ -14,7 +15,7 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 400
 #define SCREEN_SIZE ((SCREEN_WIDTH * SCREEN_HEIGHT) / 8) /*This stuff should be in nother file*/
-#define ALIGNMENT 255
+#define ALIGNMENT 256
 
 Model model;
 
@@ -23,25 +24,35 @@ static UINT8 *front_buffer = 0;
 static UINT8 *back_buffer = 0;
 static UINT8 *raw_buffer = 0;
 
-void init_buffer();
-void swap_buffer();
-void test_swap();
-void restore_screen();
+static void init_buffer();
+static void swap_buffer();
+static void clear_buffer();
+static void test_swap();
+static void restore_screen();
 
 int main() {
 
-    void *base = Physbase();
-
-    UINT32 timenow, timethen, timeElapsed;
+    UINT32 time_now, time_then, time_elapsed;
     int in_prog;
-    in_prog = 0;
-    timethen = 0;
     char key;
     int action;
+     
+    in_prog = 0;
+    time_then = get_time();
     Model *game = &model;
 
     initialize_game(game, 0);
-    render(game);
+    init_buffer();
+
+    /* draws first frame */
+    render(game, back_buffer);
+    time_now = get_time();
+    Setscreen(-1, back_buffer, -1);
+    wait_vbl(time_now);
+    swap_buffer();
+
+    time_then = get_time();
+
     game->is_game_over = FALSE;
 
     while (!game->is_game_over)
@@ -52,31 +63,41 @@ int main() {
             handle_input(game, key, in_prog);
         }
 
-        timenow = get_time();
-        timeElapsed = timenow - timethen;
+        time_now = get_time();
+        time_elapsed = time_now - time_then;
 
-        if (timeElapsed > 0)
+        if (time_elapsed > 0)
         {
             update_model(game, &in_prog);
             dismiss_outcome(game);
-            render(game, base);
-            timethen = timenow;
+
+            render(game, back_buffer);
+            Setscreen(-1, back_buffer, -1);
+            wait_vbl(time_now);
+            swap_buffer();
+
+            time_then = time_now;
         }
     }
+
+    restore_screen();
+    clear_buffer();
+    return 0;
 }
 
 /*below this stuff aswell*/
 static void init_buffer() {
-    if (original_screen == 0) {
+    if (original_screen == 0) 
+{
         original_screen = (UINT8 *)Physbase();
         front_buffer = original_screen;
-        raw_buffer = (UINT8 *)malloc(SCREEN_SIZE + ALIGNMENT);
+        raw_buffer = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
         /* malloc gives a random memory address and we need it 256 byte aligned */
         /* first we convert it to a pointer because we can't use arithmatic on it */
         /* then we add 255 because if we round the memory address down without it, it can skip the address by 255 bytes */
         /* so we guarantee that when rounding down we are within our allocated size, which is also why we give it 255 more bytes when allocating */
         /* and then you round off the last 2 bytes since that will make it always a multiple of 256 */
-        back_buffer = (UINT8 *)(((long)raw_buffer + ALIGNMENT) & 0xFFFFFF00);
+        back_buffer = (UINT8 *)(((long)raw_buffer + (ALIGNMENT - 1)) & 0xFFFFFF00);
     }
 }
 
@@ -88,7 +109,20 @@ static void swap_buffer() {
     back_buffer = temp;
 }
 
-void test_swap() {
+/* unsure if necessary but here for now */
+static void clear_buffer() {
+    if (raw_buffer != 0) 
+    {
+        free(raw_buffer);
+        raw_buffer = 0;
+    }
+
+    front_buffer = 0;
+    back_buffer = 0;
+    original_screen = 0;
+}
+
+static void test_swap() {
     init_buffer();
 
     clear_screen(front_buffer);
@@ -103,16 +137,18 @@ void test_swap() {
 
     /* flip to back buffer */
     swap_buffer();
+    Setscreen(-1, front_buffer, -1);
     Cnecin();
 
     /* flip back to the other buffer */
     swap_buffer();
+    Setscreen(-1, front_buffer, -1);
     Cnecin();
 
     /* restore original TOS screen before exit */
     restore_screen();
 }
 
-void restore_screen() {
+static void restore_screen() {
     Setscreen(-1, original_screen, -1);
 }
