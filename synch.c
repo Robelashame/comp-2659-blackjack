@@ -1,6 +1,6 @@
 #include "synch.h"
 
-void move_card(Model *game) {
+int move_card(Model *game) {
     Card *card;
     int num_of_cards;
 
@@ -11,7 +11,7 @@ void move_card(Model *game) {
         num_of_cards = game->player2.hand.num_of_cards;
         card = &game->player2.hand.cards[num_of_cards - 1];
     } else if (game->dealer_turn) {
-        if (&game->dealer.hidden_card.is_moving) {
+        if (game->dealer.hidden_card.is_moving) {
             card = &game->dealer.hidden_card;
         } else {
             num_of_cards = game->dealer.hand.num_of_cards;
@@ -23,9 +23,14 @@ void move_card(Model *game) {
         card->position[1] = move_toward(card->position[1], card->target_position[1], 2);
         card->position[0] = move_toward(card->position[0], card->target_position[0], 2);
 
-        if (card->position[1] == card->target_position[1] && card->position[0] == card->target_position[0])
-            card->moving = 0;
+        if (card->position[1] == card->target_position[1] && card->position[0] == card->target_position[0]) {
+            card->is_moving = 0;
+            if (!(card == &game->dealer.hidden_card))
+                card->is_hidden = FALSE;
+            return 0;
+        }
     }
+    return 1;
 }
 
 

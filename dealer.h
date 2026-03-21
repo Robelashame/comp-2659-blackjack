@@ -12,7 +12,12 @@ typedef struct {
     int position[2];
 } Dealer;
 
+void include_hidden(Dealer *dealer);
+
 void dealer_play(Dealer *dealer, Deck *shoe);
+
+void hidden_to_hand(Hand *hand, Card *card);
+
 
 void add_hidden_card(Dealer *dealer, Card *card);
 

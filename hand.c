@@ -31,8 +31,12 @@ void add_card(Hand *hand, Card *card) {
     hand->num_of_cards++;
 
     hand->value = calculate_hand_value(hand);
-    hand->cards[index].position[0] = hand->position[0];
-    hand->cards[index].position[1] = hand->position[1] + (index * 25);
+    hand->cards[index].position[0] = -80;
+    hand->cards[index].position[1] = hand->position[1];
+    hand->cards[index].target_position[0] = hand->position[0];
+    hand->cards[index].target_position[1] = hand->position[1] + (index * 25);
+    hand->cards[index].is_moving = TRUE;
+    hand->cards[index].is_hidden = TRUE;
 }
 
 int is_blackjack(Hand *hand) {
@@ -59,4 +63,5 @@ void remove_cards(Hand *hand) {
     hand->num_of_cards = 0;
     hand->bet_amount = 0;
     hand->value = 0;
+    
 }

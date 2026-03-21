@@ -13,9 +13,13 @@ typedef struct {
     Deck deck;
     Timer timer;
     int is_there_player2;
-    int player1_turn;
+    int player1_bet;    /*When 2 player is made*/
+    int player2_bet;    /*When 2 player is made*/
+    int player1_turn;   
     int player2_turn;
     int dealer_turn;
+    int dealing_start_cards;
+    int outcome_applied;
     int is_round_over;
     int is_game_over;
 } Model;
@@ -27,5 +31,7 @@ void initialize_game(Model *game, int is_two_player);
 void give_start_cards(Model *game);
 
 void two_players(Model *game, int is_there_plr_2);
+
+void remove_everyones_cards(Model *game);
 
 #endif
