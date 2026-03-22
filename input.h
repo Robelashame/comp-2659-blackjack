@@ -12,7 +12,7 @@
 
  OUTPUT: Returns a non-zero number for true and 0 for false.
 */
-bool has_input();
+int has_input();
 
 /*----- Function: get_input -----
 

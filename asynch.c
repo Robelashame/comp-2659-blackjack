@@ -18,12 +18,12 @@ void stand(Model *game) {
 }
 
 void increase_bet(Model *model) {
-    if (model->player1_turn)
+    if (model->player1_bet)
     {
         if (model->player1.total_bet + 50 <= model->player1.bank)
             model->player1.total_bet += 50;
     }
-    else if (model->player2_turn)
+    else if (model->player2_bet)
     {
         if (model->player2.total_bet + 50 <= model->player2.bank)
             model->player2.total_bet += 50;
@@ -31,12 +31,12 @@ void increase_bet(Model *model) {
 }
 
 void decrease_bet(Model *model) {
-    if (model->player1_turn)
+    if (model->player1_bet)
     {
         if (model->player1.total_bet - 50 >= 0)
             model->player1.total_bet -= 50;
     }
-    else if (model->player2_turn)
+    else if (model->player2_bet)
     {
         if (model->player2.total_bet - 50 >= 0)
             model->player2.total_bet -= 50;
@@ -44,14 +44,14 @@ void decrease_bet(Model *model) {
 }
 
 void bet_confirmed(Model *model) {
-    if (model->player1_turn) {
+    if (model->player1_bet) {
         model->player1.bank -= model->player1.total_bet;
         if (model->is_there_player2) {
-            model->player1_turn = 0;
-            model->player2_turn = 1;
+            model->player1_bet = 0;
+            model->player2_bet = 1;
         } else
             new_round(model);
-    } else if (model->player2_turn) {
+    } else if (model->player2_bet) {
         model->player2.bank -= model->player2.total_bet;
         new_round(model);
     }

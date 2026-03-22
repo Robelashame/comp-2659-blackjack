@@ -1,5 +1,7 @@
 #include "time.h"
 
+#include <osbind.h>
+
 UINT32 get_time() {
     long *timer;
     long old_ssp;
@@ -12,7 +14,7 @@ UINT32 get_time() {
     return time;
 }
 
-void wait_for_vbl(UINT32 old_time) {
+void wait_vbl(UINT32 old_time) {
     while (get_time() == old_time) {
         /*waiting*/
     }
