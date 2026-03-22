@@ -37,8 +37,8 @@ int move_card(Model *game) {
         return 0;
 
     if (card->is_moving) {
-        card->position[1] = move_toward(card->position[1], card->target_position[1], 2);
-        card->position[0] = move_toward(card->position[0], card->target_position[0], 2);
+        card->position[1] = move_toward(card->position[1], card->target_position[1], 40);
+        card->position[0] = move_toward(card->position[0], card->target_position[0], 40);
 
         if (card->position[1] == card->target_position[1] &&
             card->position[0] == card->target_position[0]) {

@@ -4,6 +4,25 @@
 void handle_input(Model *game, char cin, int in_prog)
 {
 
+    if (game->is_round_over)
+    {
+        if (cin == 'c')
+        {
+            remove_everyones_cards(game);
+            game->is_round_over = FALSE;
+            game->outcome_applied = FALSE;
+            game->player1_bet = TRUE;
+            game->player2_bet = FALSE;
+            game->dealer.hidden_card.position[0] = -90;
+        }
+        else if (cin == 'q')
+        {
+            quit(game);
+        }
+        return;
+    }
+
+
     if (in_prog) /*ends if card is moving*/
         return;
 
@@ -64,20 +83,6 @@ void update_model(Model *game, int *in_prog)
             if (game->is_there_player2)
                 outcome(game, 2);
             game->outcome_applied = TRUE;
-        }
-    }
-}
-
-void dismiss_outcome(Model *game) {
-    if (has_input()) {
-        char key = get_input();
-        if (key == 'c') {
-            remove_everyones_cards(game);
-            game->is_round_over = FALSE;
-            game->outcome_applied = FALSE;
-            game->player1_bet = TRUE;
-            game->player2_bet = FALSE;
-            game->dealer.hidden_card.position[0] = -90;
         }
     }
 }

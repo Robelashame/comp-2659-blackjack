@@ -72,8 +72,6 @@ int main() {
         if (timeElapsed > 0)
         {
             update_model(game, &in_prog);
-            if (game->is_round_over)
-                dismiss_outcome(game);
             clear_screen(back_buffer);
             render(game, back_buffer);
             Setscreen(-1, back_buffer, -1);
