@@ -25,11 +25,11 @@ static UINT8 *front_buffer = 0;
 static UINT8 *back_buffer = 0;
 static UINT8 *raw_buffer = 0;
 
-void init_buffer();
-void swap_buffer();
-void clear_buffer();
-void test_swap();
-void restore_screen();
+static void init_buffer();
+static void swap_buffer();
+static void clear_buffer();
+static void test_swap();
+static void restore_screen();
 
 int main() {
 
@@ -51,7 +51,7 @@ int main() {
     initialize_game(game, 0);
     init_buffer();
 
-
+    /*Draws first frame*/
     render(game, back_buffer);
     timenow = get_time();
     Setscreen(-1, back_buffer, -1);
