@@ -30,6 +30,10 @@ void render_card(const Card *card, UINT8 *base) {
 
 void render_hand(const Hand *hand, UINT8 *base) {
     int i;
+
+    if (hand->num_of_cards == 0)
+        return;
+
     render_card(&hand->cards[0], base);
     for (i = 1; i < hand->num_of_cards; i++) {
         render_card(&hand->cards[i], base);

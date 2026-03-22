@@ -75,6 +75,8 @@ void dismiss_outcome(Model *game) {
             remove_everyones_cards(game);
             game->is_round_over = FALSE;
             game->outcome_applied = FALSE;
+            game->player1_bet = TRUE;
+            game->player2_bet = FALSE;
         }
     }
 }

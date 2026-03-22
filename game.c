@@ -63,7 +63,9 @@ int main() {
         if (timeElapsed > 0)
         {
             update_model(game, &in_prog);
-            dismiss_outcome(game);
+            if (game->is_round_over)
+                dismiss_outcome(game);
+            clear_screen(base);
             render(game, base);
             timethen = timenow;
         }
