@@ -32,20 +32,6 @@ int move_card(Model *game) {
         }
     }
 
-    /* fallback to turn */
-    if (!card) {
-        if (game->player1_turn && game->player1.hand.num_of_cards > 0) {
-            card = &game->player1.hand.cards[game->player1.hand.num_of_cards - 1];
-        } else if (game->player2_turn && game->player2.hand.num_of_cards > 0) {
-            card = &game->player2.hand.cards[game->player2.hand.num_of_cards - 1];
-        } else if (game->dealer_turn) {
-            if (game->dealer.hidden_card.is_moving) {
-                card = &game->dealer.hidden_card;
-            } else if (game->dealer.hand.num_of_cards > 0) {
-                card = &game->dealer.hand.cards[game->dealer.hand.num_of_cards - 1];
-            }
-        }
-    }
 
     if (!card)
         return 0;

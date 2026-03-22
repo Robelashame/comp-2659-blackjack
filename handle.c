@@ -77,6 +77,7 @@ void dismiss_outcome(Model *game) {
             game->outcome_applied = FALSE;
             game->player1_bet = TRUE;
             game->player2_bet = FALSE;
+            game->dealer.hidden_card.position[0] = -90;
         }
     }
 }

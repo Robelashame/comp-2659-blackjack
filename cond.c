@@ -11,9 +11,10 @@ void new_round_start(Model *game) {
 
 void dealer_draws(Model *game) {
     dealer_play(&game->dealer, &game->deck);
-    if (game->dealer.hand.value > 17)
+    if (game->dealer.hand.value > 17) {
         game->dealer_turn = FALSE;
         game->is_round_over = TRUE;
+    }
 }
 
 void player_turn_ends(Model *game) {
