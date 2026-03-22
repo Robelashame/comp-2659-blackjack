@@ -29,6 +29,7 @@ void initialize_game(Model *game, int is_two_player) {
 
     game->dealer.position[0] = 20;
     game->dealer.position[1] = 280;
+    game->dealer.hidden_card.position[0] = -90;
 
     memcpy(game->dealer.hand.position, game->dealer.position, sizeof(game->dealer.position));
     memcpy(game->player1.hand.position, game->player1.hand_position, sizeof(game->player1.hand_position));
@@ -101,7 +102,7 @@ void give_start_cards(Model *game) {
         return;
         }
         
-        if (game->dealer.hand.num_of_cards == 1)   {
+        if (game->dealer.hand.num_of_cards == 1 && game->dealer.hidden_card.value == 0) {
         dealt_card = deal(&game->deck); /*dealer hidden card */
         add_hidden_card(&game->dealer, &dealt_card);
         return;
@@ -127,7 +128,7 @@ void give_start_cards(Model *game) {
         return;
         }
 
-        if (game->dealer.hand.num_of_cards == 1) {
+        if (game->dealer.hand.num_of_cards == 1 && game->dealer.hidden_card.value == 0) {
         dealt_card = deal(&game->deck); /* dealer hidden card */
         add_hidden_card(&game->dealer, &dealt_card);
         return;
