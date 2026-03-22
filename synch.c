@@ -7,6 +7,7 @@ int move_card(Model *game) {
     card = 0;
 
     /* check player 1 moving */
+
     if (game->player1.hand.num_of_cards > 0) {
         last = &game->player1.hand.cards[game->player1.hand.num_of_cards - 1];
         if (last->is_moving)
