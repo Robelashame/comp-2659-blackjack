@@ -1,14 +1,14 @@
 #include <osbind.h>
 #include "model.h"
-#include "async.h"
+#include "asynch.h"
 #include "cond.h"
-#include "sync.h"
+#include "synch.h"
 #include "render.h"
 #include "raster.h"
 #include "input.h"
 #include "TYPES.H"
 #include "handle.h"
-#include "gettime.h"
+#include "time.h"
 
 
 #define SCREEN_WIDTH 640
@@ -34,14 +34,19 @@ int main() {
 
     UINT32 timenow, timethen, timeElapsed;
     int in_prog;
-    in_prog = 0;
-    timethen = 0;
     char key;
     int action;
-    Model *game = &model;
+    Model *game;
+    
+    in_prog = 0;
+    timethen = 0;
+
+    game = &model;
+
+    clear_screen(base);
 
     initialize_game(game, 0);
-    render(game);
+    render(game, base);
     game->is_game_over = FALSE;
 
     while (!game->is_game_over)

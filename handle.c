@@ -74,7 +74,7 @@ void dismiss_outcome(Model *game) {
         if (key == 'c') {
             remove_everyones_cards(game);
             game->is_round_over = FALSE;
-            game->outcome_applied = FALSE
+            game->outcome_applied = FALSE;
         }
     }
 }

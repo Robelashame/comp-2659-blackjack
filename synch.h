@@ -5,7 +5,7 @@
 
 void timer(Model *game);    /*cant implement right now, cant reliably track seconds */
 
-int move_card(Model *game, int in_prog);    /*cant implement right now, not on animations yet */
+int move_card(Model *game);    /*cant implement right now, not on animations yet */
 
 /* moves 'current' toward 'target' by at most 'step'
    returns the new value */

@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 void initialize_game(Model *game, int is_two_player) {
-    // int player_count;
+    /* int player_count; */
     
     memset(game, 0, sizeof(Model));
     initialize_deck(&game->deck);

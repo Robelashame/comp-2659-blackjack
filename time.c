@@ -1,5 +1,7 @@
 #include "time.h"
 
+#include <osbind.h>
+
 UINT32 get_time() {
     long *timer;
     long old_ssp;
