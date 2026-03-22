@@ -32,9 +32,6 @@ static void test_swap();
 static void restore_screen();
 
 int main() {
-
-    void *base = Physbase();
-
     UINT32 timenow, timethen, timeElapsed;
     int in_prog;
     char key;
@@ -46,12 +43,11 @@ int main() {
 
     game = &model;
 
-    clear_screen(base);
-
     initialize_game(game, 0);
     init_buffer();
 
     /*Draws first frame*/
+    clear_screen(back_buffer);
     render(game, back_buffer);
     timenow = get_time();
     Setscreen(-1, back_buffer, -1);
@@ -78,8 +74,8 @@ int main() {
             update_model(game, &in_prog);
             if (game->is_round_over)
                 dismiss_outcome(game);
-            clear_screen(base);
-            render(game, base);
+            clear_screen(back_buffer);
+            render(game, back_buffer);
             Setscreen(-1, back_buffer, -1);
             wait_vbl(timenow);
             swap_buffer();
