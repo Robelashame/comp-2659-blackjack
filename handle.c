@@ -31,10 +31,14 @@ void handle_input(Model *game, char cin, int in_prog)
         if (cin == 'h')
         {
             hit(game);
+            reset_time(game);
+            startup_timer(game);
         }
         else if (cin == 's')
         {
             stand(game);
+            stop_time(game);
+            reset_time(game);
         }
     }
 
@@ -54,6 +58,7 @@ void handle_input(Model *game, char cin, int in_prog)
         else if (cin == 'c')
         {
             bet_confirmed(game);
+            startup_timer(game);
         }
     }
 
@@ -68,15 +73,22 @@ void update_model(Model *game, int *in_prog)
     *in_prog = move_card(game);
     if (!(*in_prog))
     {
+        update_timer(game);
+
+        if (timer_expired(&game->timer)) {
+            stand(game);
+        }
+
         if (game->dealing_start_cards)
             give_start_cards(game);
 
         if (game->player1_turn || game->player2_turn)
             player_bj_or_bust(game);
 
-        if (game->dealer_turn)
+        if (game->dealer_turn) {
             dealer_draws(game);
-
+            reset_time(game);
+        }
         if (game->is_round_over && !game->outcome_applied)
         {
             outcome(game, 1);

@@ -17,4 +17,10 @@ void player_turn_ends(Model *game);
 
 void timeout(Model *game);  /* time runs out */
 
+void startup_timer(Model *game);
+
+void stop_time(Model *game);
+
+void reset_time(Model *game);
+
 #endif

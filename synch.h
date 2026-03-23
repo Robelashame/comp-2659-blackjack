@@ -3,9 +3,9 @@
 
 #include "model.h"
 
-void timer(Model *game);    /*cant implement right now, cant reliably track seconds */
+void update_timer(Model *game);
 
-int move_card(Model *game);    /*cant implement right now, not on animations yet */
+int move_card(Model *game);
 
 /* moves 'current' toward 'target' by at most 'step'
    returns the new value */

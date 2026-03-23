@@ -37,7 +37,7 @@ void initialize_game(Model *game, int is_two_player) {
             memcpy(game->player2.hand.position, game->player2.hand_position, sizeof(game->player2.hand_position));
 
 
-    initialize_timer(&game->timer, 60);
+    initialize_timer(&game->timer, 30);
 
     game->player1_turn = FALSE;
     game->player2_turn = FALSE;

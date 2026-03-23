@@ -69,3 +69,7 @@ int move_toward(int current, int target, int step) {
     }
     return current;
 }
+
+void update_timer(Model *game) {
+    updateing_timer(&game->timer);
+}

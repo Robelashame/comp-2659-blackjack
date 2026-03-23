@@ -78,3 +78,15 @@ void outcome(Model *game, int player_number) {
     player->total_bet = 0;
 }
 
+void startup_timer(Model *game) {
+    start_timer(&game->timer);
+}
+
+void stop_time(Model *game) {
+    stop_timer(&game->timer);
+}
+
+void reset_time(Model *game) {
+    reset_timer(&game->timer);
+}
+
