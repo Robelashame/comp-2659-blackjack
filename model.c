@@ -59,6 +59,8 @@ void new_round(Model *game) {
     game->player2_turn = FALSE;
     game->dealer_turn = FALSE;
     game->is_round_over = FALSE;
+    game->player1_bet = FALSE;
+    game->player2_bet = FALSE;
 
 }
 
