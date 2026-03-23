@@ -1,5 +1,7 @@
 #include "handle.h"
+#include "render.h"
 #include <string.h>
+
 
 void handle_input(Model *game, char cin, int in_prog)
 {
@@ -97,4 +99,18 @@ void update_model(Model *game, int *in_prog)
             game->outcome_applied = TRUE;
         }
     }
+}
+
+void prompts(Model *game, UINT8 *base) {
+    char prompt[50];
+
+    strcpy(prompt, "");  /* default to empty */
+
+    if (game->player1_turn || game->player2_turn)
+        strcpy(prompt, "Press h to hit, s to stand.");
+    else if (game->player1_bet || game->player2_bet)
+        strcpy(prompt, "Press w to increase bet, s to decrease, c to confirm.");
+    else if (game->is_round_over)
+        strcpy(prompt, "Round is over, Press c to start new round.");
+    plot_string(base, 150, 200, prompt);
 }

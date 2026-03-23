@@ -73,6 +73,7 @@ int main() {
         {
             update_model(game, &in_prog);
             clear_screen(back_buffer);
+            prompts(game, back_buffer);
             render(game, back_buffer);
             Setscreen(-1, back_buffer, -1);
             wait_vbl(timenow);

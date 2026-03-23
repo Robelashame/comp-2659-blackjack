@@ -89,7 +89,7 @@ void render_timer(const Timer *timer, UINT8 *base) {
     /* append the number to the string */
     strcat(timer_str, seconds_int);
 
-    plot_string(base, 200, 300, timer_str);
+    plot_string(base, 200, 280, timer_str);
 }
 
 void render(const Model *model, UINT8 *base) {
