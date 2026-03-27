@@ -95,7 +95,7 @@ void render_timer(const Timer *timer, UINT8 *base) {
 void render(const Model *model, UINT8 *base) {
     render_dealer(&model->dealer, base);
     render_player(&model->player1, base);
+    render_timer(&model->timer, base);
     if (model->is_there_player2)
         render_player(&model->player2, base);
-    render_timer(&model->timer, base);
 }
