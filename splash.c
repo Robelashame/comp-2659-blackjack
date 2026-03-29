@@ -16,12 +16,12 @@ int splash_screen()
     choice = 0;
     running = 1;
 
+    base = (UINT8 *)Physbase();
+
+    draw_splash_screen(base);
+
     while (running) 
     {
-        draw splash screen
-        draw title
-        draw buttons
-
         if (has_input()) 
         {
             char input;
@@ -37,11 +37,10 @@ int splash_screen()
             }
             else if (input == KEY_Q)
             {
-                return choice; /* quit */
+                return 2; /* quit */
             }
         }
     }
-    return choice;
 }
 
 static void draw_splash_screen(UINT8 *base)
