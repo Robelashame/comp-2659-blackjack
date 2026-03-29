@@ -48,7 +48,9 @@ int main() {
 
     /*Draws first frame*/
     clear_screen(back_buffer);
+    clear_screen(front_buffer);
     render(game, back_buffer);
+    render(game, front_buffer);
     timenow = get_time();
     Setscreen(-1, back_buffer, -1);
     wait_vbl(timenow);
@@ -72,7 +74,8 @@ int main() {
         if (timeElapsed > 0)
         {
             update_model(game, &in_prog);
-            clear_screen(back_buffer);
+            /*clear_region(back_buffer, 0, 200, 400, 200);*/
+            /*clear_screen(back_buffer);*/
             prompts(game, back_buffer);
             render(game, back_buffer);
             Setscreen(-1, back_buffer, -1);

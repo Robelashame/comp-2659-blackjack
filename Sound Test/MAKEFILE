@@ -1,0 +1,15 @@
+
+tst_so~1: tst_so~1.o psg.o raster.o font.o
+	cc68x -g tst_so~1.o psg.o raster.o font.o -o tst_so~1
+
+tst_so~1.o: tst_so~1.c psg.h raster.h
+	cc68x -g -c tst_so~1.c
+
+psg.o: psg.c psg.h
+	cc68x -g -c psg.c
+
+raster.o: raster.c raster.h font.h
+	cc68x -g -c raster.c
+
+font.o: font.c font.h
+	cc68x -g -c font.c
