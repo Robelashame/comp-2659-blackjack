@@ -11,6 +11,7 @@
 #include "handle.h"
 #include "time.h"
 #include "splash.h"
+#include <stdio.h>
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 400
@@ -36,6 +37,8 @@ int main() {
     char key;
     int action;
     Model *game;
+
+    Cconws("\033f");
 
     timethen = get_time();
     in_prog = 0;

@@ -1,4 +1,45 @@
-    
+#include "raster.h"
+#include "types.h"
+#include "font.h"
+#include <stdlib.h>
+
+#define SCREEN_BYTES 32000
+#define SCREEN_WIDTH 640
+#define SCREEN_WIDTH_BYTES 80
+#define SCREEN_HEIGHT 400
+
+ /* byteOffset = row * 80 + (col / 8) */ 
+ /* times by 80 is offset for bytes per row */ 
+ /* int div by 8 is to check which byte */ 
+
+ /* mask = 1 << (7 - (c & 7)); */ 
+ /* bits are left to right, 7 -> 0 */ 
+ /* 1 << bit */ 
+ /* ex: bit is 5 */ 
+ /*1 << 5 = 00010000 */ 
+ /* taking the inverse of this gives you, to clear it */ 
+ /* 11101111 */ 
+
+void clear_screen(UINT32 *base)
+{
+    int i;
+    /* UINT32 is 4 bytes, so divide by 4 */
+    for(i = 0; i < (SCREEN_BYTES/4); i++)
+    {
+        base[i] = 0x00000000;
+    }
+}
+
+void clear_region(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
+{
+    UINT8 *base8;
+    int r;
+
+    base8 = (UINT8 *)base;
+    for(r = row; r < row + length; r++) {                
+        clear_horizontal_line(base8, r, col, width);
+    }
+}
 
 void plot_pixel(UINT8 *base, int row, int col)
 {

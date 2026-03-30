@@ -2,7 +2,9 @@
 #include "input.h"
 #include "raster.h"
 #include "bmaps.h"
+#include "types.h"
 #include <osbind.h>
+#include <stdio.h>
 
 #define KEY_ONE '1'
 #define KEY_TWO '2'
@@ -10,6 +12,7 @@
 
 int splash_screen() 
 {
+    UINT8 *base;
     int choice;
     int running;
 
@@ -49,7 +52,7 @@ static void draw_splash_screen(UINT8 *base)
 
 	/* title */
     plot_16bit_bitmap(base, 87, 184-8, heart, 16);
-    plot_16bit_bitmap(base, 87, 237-8, diamond, 10);
+    plot_16bit_bitmap(base, 87, 237-8, diamond, 16);
     plot_16bit_bitmap(base, 87, 387-8, heart, 16);
     plot_16bit_bitmap(base, 87, 440-8, spade, 16);
     plot_string(base, 90, 290-8, "BlackJack");
@@ -63,4 +66,9 @@ static void draw_splash_screen(UINT8 *base)
 
     plot_rectangle(base, 270, 269-8, 20, 110);
     plot_string(base, 276, 309-8, "Quit");
+}
+
+void ending_screen(UINT8 *base)
+{
+    clear_screen(base);
 }
