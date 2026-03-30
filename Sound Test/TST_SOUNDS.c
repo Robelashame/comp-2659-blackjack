@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include "psg.h"
 #include "raster.h"
+#include "music.h"
 
 int main()
 {
+	UINT32 timenow;
 	void *base = Physbase();
 
 	printf("\033f");
@@ -56,6 +58,16 @@ int main()
     while (!Cconis()) ;
 	stop_sound();
 	clear_screen(base);
+	Cnecin();
+
+	timenow = get_time();
+	start_music();
+
+	while(!Cconis())
+	{
+		timenow = get_time();
+		update_music(timenow);
+	}
 	Cnecin();
 
 	return 0;

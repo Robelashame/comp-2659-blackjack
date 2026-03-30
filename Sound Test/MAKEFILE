@@ -1,8 +1,8 @@
 
-tst_so~1: tst_so~1.o psg.o raster.o font.o
-	cc68x -g tst_so~1.o psg.o raster.o font.o -o tst_so~1
+tst_so~1: tst_so~1.o psg.o raster.o font.o time.o music.o
+	cc68x -g tst_so~1.o psg.o raster.o font.o time.o music.o -o tst_so~1
 
-tst_so~1.o: tst_so~1.c psg.h raster.h
+tst_so~1.o: tst_so~1.c psg.h raster.h time.h
 	cc68x -g -c tst_so~1.c
 
 psg.o: psg.c psg.h
@@ -13,3 +13,9 @@ raster.o: raster.c raster.h font.h
 
 font.o: font.c font.h
 	cc68x -g -c font.c
+
+music.o: music.c music.h
+	cc68x -g -c music.c
+
+time.o: time.c time.h
+	cc68x -g -c time.c
