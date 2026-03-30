@@ -10,8 +10,7 @@
 #include "TYPES.H"
 #include "handle.h"
 #include "time.h"
-
-
+#include "splash.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 400
@@ -33,15 +32,30 @@ static void restore_screen();
 
 int main() {
     UINT32 timenow, timethen, timeElapsed;
-    int in_prog;
+    int in_prog, choice;
     char key;
     int action;
     Model *game;
-    
-    in_prog = 0;
-    timethen = get_time();
 
+    timethen = get_time();
+    in_prog = 0;
     game = &model;
+    
+    choice = splash_screen();
+
+    if (choice == 2)
+    {
+        return 0; /* quit game */
+    }
+
+    if (choice == 0)
+    {
+        /* single player */
+    }
+    else if (choice == 1) 
+    {
+        /* two player */
+    }
 
     initialize_game(game, 0);
     init_buffer();
@@ -82,7 +96,6 @@ int main() {
             timethen = timenow;
         }
     }
-
     restore_screen();
     clear_buffer();
     return 0;

@@ -1,60 +1,4 @@
-#include "raster.h"
-#include "types.h"
-#include "font.h"
-#include <stdlib.h>
-
-#define SCREEN_BYTES 32000
-#define SCREEN_WIDTH 640
-#define SCREEN_WIDTH_BYTES 80
-#define SCREEN_HEIGHT 400
-
- /* byteOffset = row * 80 + (col / 8) */ 
- /* times by 80 is offset for bytes per row */ 
- /* int div by 8 is to check which byte */ 
-
- /* mask = 1 << (7 - (c & 7)); */ 
- /* bits are left to right, 7 -> 0 */ 
- /* 1 << bit */ 
- /* ex: bit is 5 */ 
- /*1 << 5 = 00010000 */ 
- /* taking the inverse of this gives you, to clear it */ 
- /* 11101111 */ 
-
-void clear_screen(UINT32 *base)
-{
-    int i;
-    /* UINT32 is 4 bytes, so divide by 4 */
-    for(i = 0; i < (SCREEN_BYTES/4); i++)
-    {
-        base[i] = 0x00000000;
-    }
-}
-
-void clear_region(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
-{
-    UINT8 *base8;
-    UINT8 mask;
-    UINT16 yEnd, xEnd;
-    UINT32 byteOffset;
-    int r, c;
-
-    base8 = (UINT8 *)base;
-
-    yEnd = row + length;
-    xEnd = col + width;
-
-    if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH) return;
-    if (yEnd > SCREEN_HEIGHT) yEnd = SCREEN_HEIGHT;
-    if (xEnd > SCREEN_WIDTH) xEnd = SCREEN_WIDTH;
-
-    for(r = row; r < yEnd; r++) {                
-        for(c = col; c < xEnd; c++) {            
-            byteOffset = r * SCREEN_WIDTH_BYTES + (c >> 3);      /* find byte */
-            mask = 0x01 << (7 - (c & 7));          /* find bit */
-            base8[byteOffset] &= (UINT8)~mask;   /* clear bit */
-        }   
-    }
-}
+    
 
 void plot_pixel(UINT8 *base, int row, int col)
 {
@@ -73,12 +17,7 @@ void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
     UINT8 *cur_addr;
     UINT16 remaining_pixels;
     UINT8 *byte_base = (UINT8 *)base;
-    
-    /* Adress calculations and byte offset calculate, also take note of remaining pixels to draw. */
 
-    UINT8 *cur_addr = (byte_base + row * SCREEN_WIDTH_BYTES + (col >> 3));
-    remaining_pixels = length;
-    bit_offset = col & 7;
     /* Out of bounds checking */
     if(row < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || (col + length) <= 0 || length <= 0)
     {
@@ -100,6 +39,11 @@ void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
     {
         return;
     }
+
+    /* Address calculations and byte offset calculate, also take note of remaining pixels to draw. */
+    cur_addr = (byte_base + row * SCREEN_WIDTH_BYTES + (col >> 3));
+    remaining_pixels = length;
+    bit_offset = col & 7;
 
     /* Handle first partial byte writting */
     /* If the remainder of the byte is not zero then a partial byte is needed to be masked.*/
@@ -329,5 +273,74 @@ void plot_string(UINT8 *base, int row, int col, char *str)
         
         /* 4. Move our pointer to the next character in the string */
         str++;
+    }
+}
+
+static void clear_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
+{
+    int bit_offset;
+    UINT8 mask;
+    UINT8 *cur_addr;
+    UINT16 remaining_pixels;
+    UINT8 *byte_base = (UINT8 *)base;
+
+    /* Out of bounds checking / clipping first */
+    if (row < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || (col + length) <= 0 || length <= 0)
+    {
+        return;
+    }
+
+    if (col < 0)
+    {
+        length += col;
+        col = 0;
+    }
+
+    if ((col + length) > SCREEN_WIDTH)
+    {
+        length = SCREEN_WIDTH - col;
+    }
+
+    if (length <= 0)
+    {
+        return;
+    }
+
+    /* Now calculate address info after clipping */
+    cur_addr = byte_base + row * SCREEN_WIDTH_BYTES + (col >> 3);
+    remaining_pixels = length;
+    bit_offset = col & 7;
+
+    /* Handle first partial byte */
+    if (bit_offset != 0)
+    {
+        if (remaining_pixels <= (8 - bit_offset))
+        {
+            mask = (UINT8)(0xFF >> bit_offset);
+            mask &= (UINT8)(0xFF << (8 - (bit_offset + remaining_pixels)));
+            *cur_addr &= (UINT8)(~mask);
+            return;
+        }
+
+        mask = (UINT8)(0xFF >> bit_offset);
+        *cur_addr &= (UINT8)(~mask);
+
+        remaining_pixels -= (8 - bit_offset);
+        cur_addr++;
+    }
+
+    /* Handle full bytes */
+    while (remaining_pixels >= 8)
+    {
+        *cur_addr = 0x00;
+        remaining_pixels -= 8;
+        cur_addr++;
+    }
+
+    /* Handle last partial byte */
+    if (remaining_pixels > 0)
+    {
+        mask = (UINT8)(0xFF << (8 - remaining_pixels));
+        *cur_addr &= (UINT8)(~mask);
     }
 }
