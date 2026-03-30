@@ -59,6 +59,8 @@ void handle_input(Model *game, char cin, int in_prog)
         }
         else if (cin == 'c')
         {
+            if (game->player1.total_bet == 0)
+                return;
             bet_confirmed(game);
             startup_timer(game);
         }
@@ -130,7 +132,11 @@ void prompts(Model *game, UINT8 *base) {
         }
     }
     else if (game->player1_bet) {
-        strcpy(prompt, "Press w to increase bet, s to decrease, c to confirm.");
+        if (game->player1.bank == 0) {
+            strcpy(prompt, "You have no more money. You lose.");
+        }
+        else
+            strcpy(prompt, "Press w to increase bet, s to decrease, c to confirm.");
     }
 
     plot_string(base, 150, 200, prompt);
