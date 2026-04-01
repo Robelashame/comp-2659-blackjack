@@ -3,6 +3,7 @@
 #include "psg.h"
 #include "raster.h"
 #include "music.h"
+#include "effects.h"
 
 int main()
 {
@@ -14,6 +15,11 @@ int main()
 	clear_screen(base);
 	stop_sound();
 
+	while(Cconis())
+	{
+
+	}
+	Cnecin();                   
 	plot_string(base, 50, 50, "Press Key to test channel A");
 
     /* Channel A Test */
@@ -25,11 +31,15 @@ int main()
 
 	write_psg(7, 0x3E);
 
-    while (!Cconis()) ;
+    while (!Cconis())
+	{
+
+	}
+
+	Cnecin();
 	stop_sound();
 	clear_screen(base);
 	plot_string(base, 50, 50, "Press Key to test channel B");
-	Cnecin();
 
     /* Channel B Test */
 
@@ -40,7 +50,11 @@ int main()
 
     enable_channel(1, 1, 0);
 
-    while (!Cconis()) ;
+    while (!Cconis())
+	{
+
+	}
+	Cnecin();
 
 	stop_sound();
 	clear_screen(base);
@@ -55,9 +69,16 @@ int main()
 
     enable_channel(2, 1, 0);
 
-    while (!Cconis()) ;
+    while (!Cconis())
+	{
+
+	}
+	Cnecin();
+
 	stop_sound();
 	clear_screen(base);
+	plot_string(base, 50, 50, "Press Key to test music playing");
+
 	Cnecin();
 
 	timenow = get_time();
@@ -69,6 +90,39 @@ int main()
 		update_music(timenow);
 	}
 	Cnecin();
+
+	stop_sound();
+	clear_screen(base);
+	plot_string(base, 50, 50, "Play Woosh Sound Effect");
+
+	while (!Cconis())
+	{
+
+	}
+	Cnecin();
+
+	while (!Cconis())
+	{
+		play_effect_woosh();
+	}
+	Cnecin();
+
+	stop_sound();
+	clear_screen(base);
+	plot_string(base, 50, 50, "Play Hit Sound Effect");
+	while (!Cconis())
+	{
+
+	}
+	Cnecin();
+
+	play_effect_hit();
+	while (!Cconis())
+	{
+
+	}
+	Cnecin();
+
 
 	return 0;
 }

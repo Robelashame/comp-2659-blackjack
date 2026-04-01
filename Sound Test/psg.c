@@ -12,6 +12,8 @@ void write_psg(int reg, UINT8 val)
 {
     long old_ssp = Super(0);
 
+    if(reg < 0 || reg > 15) return;
+
     *PSG_REG_SELECT = reg;
     *PSG_REG_WRITE = val;
 
@@ -86,5 +88,24 @@ void stop_sound()
     write_psg(8, 0);     /* Volume A */
     write_psg(9, 0);     /* Volume B */
     write_psg(10, 0);    /* Volume C */
+}
+
+
+void set_noise(int tuning)
+{
+    if(tuning < 0 || tuning > 31) return;
+
+    write_psg(6, tuning);
+}
+
+
+void set_envelope(int shape, unsigned int sustain)
+{
+    if(shape < 0 || shape > 15) return;
+
+    write_psg(11, sustain & 0xFF);        
+    write_psg(12, (sustain >> 8) & 0xFF);
+
+    write_psg(13, shape);
 }
 
