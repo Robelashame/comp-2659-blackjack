@@ -95,7 +95,7 @@ void set_noise(int tuning)
 {
     if(tuning < 0 || tuning > 31) return;
 
-    write_psg(6, tuning);
+    write_psg(6, tuning & 0x1F);
 }
 
 

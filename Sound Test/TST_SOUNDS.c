@@ -101,9 +101,12 @@ int main()
 	}
 	Cnecin();
 
+	timenow = get_time();
+	play_effect_woosh();
 	while (!Cconis())
 	{
-		play_effect_woosh();
+		timenow = get_time();
+		update_effects(timenow);
 	}
 	Cnecin();
 
