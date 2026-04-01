@@ -130,10 +130,39 @@ void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
 void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
 {
     int i;
-    UINT8 *byte_base = (UINT8 *)base;
+    UINT8 *cur_addr;
+    UINT8 bit_mask;
+    UINT8 *base8 = (UINT8 *)base;
+    
+    /* Out of bounds checking */
+    if(col < 0 || col >= SCREEN_WIDTH || row >= SCREEN_HEIGHT || (row + length) <= 0 || length <= 0)
+    {
+        return;
+    }
+
+    if(row < 0)
+    {
+        length += row;
+        row = 0;
+    }
+
+    if((row + length) > SCREEN_HEIGHT)
+    {
+        length = SCREEN_HEIGHT - row;
+    }
+
+    if(length <= 0)
+    {
+        return;
+    }
+
+    cur_addr = (base8 + row * SCREEN_WIDTH_BYTES + (col >> 3));
+    bit_mask = 1 << (7 - (col & 7));
+
     for(i = 0; i < length; i++)
     {
-        plot_pixel(byte_base, row + i, col);
+        *cur_addr |= bit_mask;
+        cur_addr += SCREEN_WIDTH_BYTES;
     }
 }
 
@@ -237,15 +266,22 @@ void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 
 
 void plot_8bit_bitmap(UINT8 *base, int row, int col, const UINT8 *bitmap, UINT16 height)
 {
-    int r, c;
+    int r, c, screen_row, screen_col;
     for(r = 0; r < height; r++)
     {
         for(c = 0; c < 8; c++)
         {
+            screen_row = row + r;
+            screen_col = col + c;
+            if (screen_row < 0 || screen_col < 0 || screen_row >= SCREEN_HEIGHT || screen_col >= SCREEN_WIDTH)
+            {
+                continue;
+            }
+                
             /* Check if the specific bit is set (1) */
             if(bitmap[r] & (1 << (7 - c)))
             {
-                plot_pixel(base, row + r, col + c);
+                *(base + screen_row * SCREEN_WIDTH_BYTES + (screen_col >> 3)) |= 1 << (7 - (screen_col & 7));
             }
         }
     }
@@ -253,17 +289,23 @@ void plot_8bit_bitmap(UINT8 *base, int row, int col, const UINT8 *bitmap, UINT16
 
 void plot_16bit_bitmap(UINT16 *base, int row, int col, const UINT16 *bitmap, UINT16 height)
 {
-    int r, c;
+    int r, c, screen_row, screen_col;
     UINT8 *base8 = (UINT8 *)base; 
-
-    for (r = 0; r < height; r++)
+    for(r = 0; r < height; r++)
     {
-        for (c = 0; c < 16; c++) 
+        for(c = 0; c < 16; c++)
         {
-            /* Correct: 0x8000 is the leftmost bit of a 16-bit word */
-            if (bitmap[r] & (0x8000 >> c))
+            screen_row = row + r;
+            screen_col = col + c;
+            if (screen_row < 0 || screen_col < 0 || screen_row >= SCREEN_HEIGHT || screen_col >= SCREEN_WIDTH)
             {
-                plot_pixel(base8, row + r, col + c);
+                continue;
+            }
+                
+            /* Check if the specific bit is set (1) */
+            if(bitmap[r] & (0x8000 >> c))
+            {
+                *(base8 + screen_row * SCREEN_WIDTH_BYTES + (screen_col >> 3)) |= 1 << (7 - (screen_col & 7));
             }
         }
     }
@@ -271,18 +313,23 @@ void plot_16bit_bitmap(UINT16 *base, int row, int col, const UINT16 *bitmap, UIN
 
 void plot_32bit_bitmap(UINT32 *base, int row, int col, const UINT32 *bitmap, UINT16 height)
 {
-    int r, c;
-    UINT8 *base8 = (UINT8 *)base; /* Cast to byte-pointer for plot_pixel */
-
-    for (r = 0; r < height; r++)
+    int r, c, screen_row, screen_col;
+    UINT8 *base8 = (UINT8 *)base; 
+    for(r = 0; r < height; r++)
     {
-        for (c = 0; c < 32; c++)
+        for(c = 0; c < 32; c++)
         {
-            /* Use 1UL to force 32-bit logic. 
-               We shift 1 left by (31 - c) to check bits from left-to-right. */
-            if (bitmap[r] & (1UL << (31 - c)))
+            screen_row = row + r;
+            screen_col = col + c;
+            if (screen_row < 0 || screen_col < 0 || screen_row >= SCREEN_HEIGHT || screen_col >= SCREEN_WIDTH)
             {
-                plot_pixel(base8, row + r, col + c);
+                continue;
+            }
+                
+            /* Check if the specific bit is set (1) */
+            if(bitmap[r] & (0x80000000UL >> c))
+            {
+                *(base8 + screen_row * SCREEN_WIDTH_BYTES + (screen_col >> 3)) |= 1 << (7 - (screen_col & 7));
             }
         }
     }
