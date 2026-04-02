@@ -51,16 +51,7 @@ int main() {
         return 0; /* quit game */
     }
 
-    if (choice == 0)
-    {
-        /* single player */
-    }
-    else if (choice == 1) 
-    {
-        /* two player */
-    }
-
-    initialize_game(game, 0);
+    initialize_game(game, choice);
     init_buffer();
 
     /*Draws first frame*/
@@ -104,7 +95,7 @@ int main() {
     return 0;
 }
 
-/*below this stuff aswell*/
+/*below this stuff as well*/
 static void init_buffer() {
     if (original_screen == 0) 
 {

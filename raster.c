@@ -129,29 +129,32 @@ void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
 
 void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
 {
-    int i;
+    int i, len;
     UINT8 *cur_addr;
     UINT8 bit_mask;
     UINT8 *base8 = (UINT8 *)base;
+    len = (int)length;
     
     /* Out of bounds checking */
-    if(col < 0 || col >= SCREEN_WIDTH || row >= SCREEN_HEIGHT || (row + length) <= 0 || length <= 0)
+    if(col < 0 || col >= SCREEN_WIDTH || row >= SCREEN_HEIGHT || (row + len) <= 0 || len <= 0)
     {
         return;
     }
 
+    /* Top clipping */
     if(row < 0)
     {
-        length += row;
+        len += row;
         row = 0;
     }
 
-    if((row + length) > SCREEN_HEIGHT)
+    /* Bottom clipping */
+    if((row + len) > SCREEN_HEIGHT)
     {
-        length = SCREEN_HEIGHT - row;
+        len = SCREEN_HEIGHT - row;
     }
 
-    if(length <= 0)
+    if(len <= 0)
     {
         return;
     }
@@ -159,7 +162,7 @@ void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
     cur_addr = (base8 + row * SCREEN_WIDTH_BYTES + (col >> 3));
     bit_mask = 1 << (7 - (col & 7));
 
-    for(i = 0; i < length; i++)
+    for(i = 0; i < len; i++)
     {
         *cur_addr |= bit_mask;
         cur_addr += SCREEN_WIDTH_BYTES;
@@ -170,7 +173,6 @@ void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
 /* Bresenham calculates the ideal mathematical line and keeps math to only interger addition and subtraction, no floats so math is faster */
 /* Instead of calculating the slope each time, we calculate the error, this tells us how much we are above or below the true line */
 /* if dy = 1, and dx = 2, slope = 1/2 = 0.5, which means for every 2 steps in x, we take 1 step in y, but instead we use 0-2 so no float numbers*/
-/*  */
 void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_col)
 {
     UINT8 *base8 = (UINT8 *)base;
