@@ -21,7 +21,7 @@ void clear_screen(UINT32 *base);
 
  INPUT: Address(UINT32*): to the start of the screen
         Position(row,col): the coordinates of the top left pixel of the region
-        Length: the lenth (number of rows) in pixels of the region
+        Length: the length (number of rows) in pixels of the region
         Width: the width (number of columns) in pixels of the region
 
  OUTPUT: None

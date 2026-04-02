@@ -44,52 +44,38 @@ void render_hand(const Hand *hand, UINT8 *base) {
 }
 
 void render_player(const Player *player, UINT8 *base) {
-    char bank[20] = "Bank: ";
-    char value[20] = "Value: ";
-    char bet[20] = "Bet: ";
-
-    char bank_int[10];
-    char value_int[10];
-    char bet_int[10];
-
-    /* convert integers to strings */
-    sprintf(bank_int, "%d", player->bank);
-    sprintf(value_int, "%d", player->hand.value);
-    sprintf(bet_int, "%d", player->total_bet);
-
-    /*append the numbers to the text */
-    strcat(bank, bank_int);
-    strcat(value, value_int);
-    strcat(bet, bet_int);
-
-    plot_string(base, player->hand_position[0] + 105, player->hand_position[1], bank);
-    plot_string(base, player->hand_position[0] - 20, player->hand_position[1], value);
-    plot_string(base, player->hand_position[0] - 40, player->hand_position[1], bet);
-
-    render_hand(&player->hand, base);
+    render_player_bank(&player->hand, base);
+    render_player_hand(&player->hand, base);
+    render_player_bet(&player->hand, base);
+    render_player_cards(&player->hand, base);
 }
 
-void render_player_text(const Player *player, UINT8 *base) {
+void render_player_bank(const Player *player, UINT8 *base) {
+    char bank[20] = "Bank: ";
+    char bank_int[10];
+    /* convert integers to strings */
+    sprintf(bank_int, "%d", player->bank);
+    /*append the numbers to the text */
     plot_string(base, player->hand_position[0] + 105, player->hand_position[1], bank);
-    plot_string(base, player->hand_position[0] - 20, player->hand_position[1], value);
+}
+
+void render_player_hand(const Player *player, UINT8 *base) {
+    char value[20] = "Value: ";
+    char value_int[10];
+    sprintf(bank_int, "%d", player->bank);
+    plot_string(base, player->hand_position[0] + 105, player->hand_position[1], bank);
+}
+
+void render_player_bet(const Player *player, UINT8 *base) {
+    char bet[20] = "Bet: ";
+    char bet_int[10];
+    sprintf(bet_int, "%d", player->total_bet);
+    strcat(bet, bet_int);
     plot_string(base, player->hand_position[0] - 40, player->hand_position[1], bet);
 }
 
 void render_player_cards(const Player *player, UINT8 *base) {
-    char bank_int[10];
-    char value_int[10];
-    char bet_int[10];
-
-    /* convert integers to strings */
-    sprintf(bank_int, "%d", player->bank);
-    sprintf(value_int, "%d", player->hand.value);
-    sprintf(bet_int, "%d", player->total_bet);
-
-    plot_string(base, player->hand_position[0] + 105, player->hand_position[1], bank);
-    plot_string(base, player->hand_position[0] - 20, player->hand_position[1], value);
-    plot_string(base, player->hand_position[0] - 40, player->hand_position[1], bet);
-
-
+    render_hand(&player->hand, base);
 }
 
 void render_dealer(const Dealer *dealer, UINT8 *base) {
@@ -120,9 +106,9 @@ void render_timer_tick(const Timer *timer, UINT8 *base) {
 }
 
 void render(const Model *model, UINT8 *base) {
+    render_timer(&model->timer, base);
     render_dealer(&model->dealer, base);
     render_player(&model->player1, base);
-    render_timer(&model->timer, base);
     if (model->is_there_player2)
         render_player(&model->player2, base);
 }
@@ -148,6 +134,56 @@ void create_snapshot(const Model *game, RenderSnapshot *snap) {
     snap->is_game_over = game->is_game_over;
 }
 
-void render_min(const Model *model, UINT8 *base) {
-    
+void render_min(const Model *game, RenderSnapshot *snap, UINT8 *base) {
+    if(player1_bank_changed(game, snap)) {
+        clear_player1_bank(&game->player, base);
+        render_player_bank(&player->hand, base);
+    }
+
+    if(player1_hand_changed(game, snap)) {
+        clear_player1_hand(&game->player, base);
+        render_player_hand(&player->hand, base);
+    }
+
+    if(player1_bet_changed(game, snap)) {
+        clear_player1_bet(&game->player, base);
+        render_player_bet(&player->hand, base);
+    }
+
+
+
+
+
+}
+
+int player1_bank_changed(const Model *game, RenderSnapshot *snap) {
+    return snap->player.bank != game->player.bank;
+}
+
+int player1_hand_changed(const Model *game, RenderSnapshot *snap) {
+    return snap->player.hand.value != game->player.hand.value;
+}
+
+int player1_bet_changed(const Model *game, RenderSnapshot *snap) {
+    return snap->player.total_bet != game->player.total_bet;
+}
+
+int player1_cards_changed(const Model *game, RenderSnapshot *snap) {
+    return (memcpy(&snap->player.hand, &game->player.hand), sizeof(Hand) != 0);
+}
+
+void clear_player1_bank(const Player *player, UINT8 *base) {
+    clear_region(base, player->hand_position[0] + 105, player->hand_position[1], 8, 88);
+}
+
+void clear_player1_value(const Player *player, UINT8 *base) {
+    clear_region(base, player->hand_position[0] - 20, player->hand_position[1], 8, 72);
+}
+
+void clear_player1_bet(const Player *player, UINT8 *base) {
+    clear_region(base, player->hand_position[0] - 40, player->hand_position[1], 8, 80);
+}
+
+void clear_player1_cards(const Player *player, UINT8 *base) {
+    clear_region()
 }

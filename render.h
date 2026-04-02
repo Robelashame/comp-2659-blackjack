@@ -31,7 +31,11 @@ void render(const Model *model, UINT8 *base);
 
 void render_player(const Player *player, UINT8 *base);
 
-void render_player_text(const Player *player, UINT8 *base);
+void render_player_bank(const Player *player, UINT8 *base);
+
+void render_player_hand(const Player *player, UINT8 *base);
+
+void render_player_bet(const Player *player, UINT8 *base);
 
 void render_player_cards(const Player *player, UINT8 *base);
 
@@ -50,5 +54,21 @@ void render_timer_text(const Timer *timer, UINT8 *base);
 void render_timer_tick(const Timer *timer, UINT8 *base);
 
 void create_snapshot(const Model *game, RenderSnapshot *snapshot);
+
+int player1_bank_changed(const Model *game, RenderSnapshot *snap);
+
+int player1_hand_changed(const Model *game, RenderSnapshot *snap);
+
+int player1_bet_changed(const Model *game, RenderSnapshot *snap);
+
+int player1_cards_changed(const Model *game, RenderSnapshot *snap);
+
+void clear_player1_bank(const Player *player, UINT8 *base);
+
+void clear_player1_value(const Player *player, UINT8 *base);
+
+void clear_player1_bet(const Player *player, UINT8 *base);
+
+void clear_player1_cards(const Player *player, UINT8 *base);
 
 #endif
