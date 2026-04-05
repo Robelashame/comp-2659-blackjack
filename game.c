@@ -19,6 +19,8 @@
 #define ALIGNMENT 256
 
 Model model;
+RenderSnapshot front_snapshot;
+RenderSnapshot back_snapshot;
 
 static UINT8 *original_screen = 0;  /*this stuff too*/
 static UINT8 *front_buffer = 0;
@@ -54,9 +56,13 @@ int main() {
     initialize_game(game, choice);
     init_buffer();
 
+    clear_screen(front_buffer);
+
     /*Draws first frame*/
     clear_screen(back_buffer);
     render(game, back_buffer);
+    create_snapshot(game, &back_snapshot);
+    create_snapshot(game, &front_snapshot);
     timenow = get_time();
     Setscreen(-1, back_buffer, -1);
     wait_vbl(timenow);
@@ -65,6 +71,7 @@ int main() {
     timethen = get_time();
 
     game->is_game_over = FALSE;
+
 
     while (!game->is_game_over)
     {
@@ -80,9 +87,8 @@ int main() {
         if (timeElapsed > 0)
         {
             update_model(game, &in_prog);
-            clear_screen(back_buffer);
             prompts(game, back_buffer);
-            render(game, back_buffer);
+            render_min(game, &back_snapshot, back_buffer);
             Setscreen(-1, back_buffer, -1);
             wait_vbl(timenow);
             swap_buffer();

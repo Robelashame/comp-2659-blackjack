@@ -29,15 +29,19 @@ typedef struct {
 
 void render(const Model *model, UINT8 *base);
 
+void render_min(const Model *game, RenderSnapshot *snap, UINT8 *base);
+
 void render_player(const Player *player, UINT8 *base);
 
 void render_player_bank(const Player *player, UINT8 *base);
 
-void render_player_hand(const Player *player, UINT8 *base);
+void render_player_value(const Player *player, UINT8 *base);
 
 void render_player_bet(const Player *player, UINT8 *base);
 
 void render_player_cards(const Player *player, UINT8 *base);
+
+void render_moving_cards(const Hand *hand, UINT8 *base);
 
 void render_hand(const Hand *hand, UINT8 *base);
 
@@ -55,20 +59,24 @@ void render_timer_tick(const Timer *timer, UINT8 *base);
 
 void create_snapshot(const Model *game, RenderSnapshot *snapshot);
 
-int player1_bank_changed(const Model *game, RenderSnapshot *snap);
+int player_bank_changed(const Model *game, RenderSnapshot *snap);
 
-int player1_hand_changed(const Model *game, RenderSnapshot *snap);
+int player_value_changed(const Model *game, RenderSnapshot *snap);
 
-int player1_bet_changed(const Model *game, RenderSnapshot *snap);
+int player_bet_changed(const Model *game, RenderSnapshot *snap);
 
-int player1_cards_changed(const Model *game, RenderSnapshot *snap);
+int player_cards_changed(const Model *game, RenderSnapshot *snap);
 
-void clear_player1_bank(const Player *player, UINT8 *base);
+void clear_player_bank(const Player *player, UINT8 *base);
 
-void clear_player1_value(const Player *player, UINT8 *base);
+void clear_player_value(const Player *player, UINT8 *base);
 
-void clear_player1_bet(const Player *player, UINT8 *base);
+void clear_player_bet(const Player *player, UINT8 *base);
 
-void clear_player1_cards(const Player *player, UINT8 *base);
+void clear_player_cards(const Player *player, UINT8 *base);
+
+void clear_old_moving_cards(const Hand *old_hand, UINT8 *base);
+
+int is_cards_moving(const Hand *hand);
 
 #endif
