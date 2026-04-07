@@ -325,3 +325,19 @@ static int is_cards_moving(const Hand *hand) {
     }
     return 0;
 }
+
+int snapshot_has_moving_cards(const RenderSnapshot *snap) {
+    int i, num;
+    if(snap->player1.hand.num_of_cards > snap->dealer.hand.num_of_cards) {
+        num = snap->player1.hand.num_of_cards;
+    } else {
+        num = snap->dealer.hand.num_of_cards;
+    }
+
+    for (i = 0; i < num; i++) {
+        if(snap->player1.hand.cards[i].is_moving != 0 || snap->dealer.hand.cards[i].is_moving != 0 || snap->dealer.hidden_card.is_moving != 0) {
+            return 1;
+        }
+    }
+    return 0;
+}

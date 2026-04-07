@@ -96,5 +96,8 @@ void clear_timer_tick(const Timer *timer, UINT8 *base);
 
 void clear_prompts(UINT8 *base);
 
+/* utility */
+
+int snapshot_has_moving_cards(const RenderSnapshot *snap);
 
 #endif

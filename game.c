@@ -87,7 +87,7 @@ int main() {
         {
             update_model(game, &in_prog);
 
-            if (in_prog) {
+            if (in_prog || snapshot_has_moving_cards(&back_snapshot)) {
                 draw_full_frame(game, back_buffer, &back_snapshot);
             } else {
                 render_min(game, &back_snapshot, back_buffer);

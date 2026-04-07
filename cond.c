@@ -65,7 +65,9 @@ void outcome(Model *game, int player_number) {
         player = &game->player1; 
     }
 
-    if ((game->dealer.hand.value < player->hand.value) && (player->hand.value != 21)) {
+    if (player->hand.value > 21) {
+        /*Player busts, no payout*/
+    } else if ((game->dealer.hand.value < player->hand.value) && (player->hand.value != 21)) {
         player->bank += (player->total_bet * 2);
     } else if ((game->dealer.hand.value < player->hand.value) && (player->hand.value == 21)) {
         player->bank += (player->total_bet * 5) / 2;    /* 3 to 2 payout for getting blackjack */
@@ -89,4 +91,3 @@ void stop_time(Model *game) {
 void reset_time(Model *game) {
     reset_timer(&game->timer);
 }
-
