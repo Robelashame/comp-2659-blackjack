@@ -1,5 +1,4 @@
 #include "render.h"
-#include "handle.h"
 #include <string.h>
 #include "stdio.h"
 
@@ -18,7 +17,7 @@ void render(const Model *model, UINT8 *base) {
 void render_min(const Model *game, RenderSnapshot *snap, UINT8 *base) {
     if(prompts_changed(game, snap)) {
         clear_prompts(base);
-        prompts(game, base);
+        render_prompts(game, base);
     }
     
     if(player_bank_changed(game, snap)) {
@@ -229,6 +228,46 @@ void render_timer_tick(const Timer *timer, UINT8 *base) {
     /* convert integer seconds to string */
     sprintf(seconds_int, "%d", timer->seconds);
     plot_string(base, 200, 390, seconds_int);
+}
+
+void render_prompts(Model *game, UINT8 *base) {
+    char prompt[100];
+    int x;
+
+    strcpy(prompt, "");  /* default to empty */
+
+    if (game->player1_turn) {
+        strcpy(prompt, "Press h to hit, s to stand.");
+    }
+    else if (game->dealer_turn) {
+        strcpy(prompt, "Dealer is playing.");
+    }
+    else if (game->is_round_over) {
+        /* Determine outcome for Player 1 */
+        if (game->player1.hand.value > 21) {
+            strcpy(prompt, "Player 1 busts. Dealer wins. Press c for new round.");
+        }
+        else if (game->dealer.hand.value > 21) {
+            strcpy(prompt, "Dealer busts. Player 1 wins. Press c for new round.");
+        }
+        else if (game->player1.hand.value > game->dealer.hand.value) {
+            strcpy(prompt, "Player 1 wins. Press c for new round.");
+        }
+        else if (game->player1.hand.value < game->dealer.hand.value) {
+            strcpy(prompt, "Dealer wins. Press c for new round.");
+        }
+        else {
+            strcpy(prompt, "Push. Press c for new round.");
+        }
+    }
+    else if (game->player1_bet) {
+        strcpy(prompt, "Press w to increase bet, s to decrease, c to confirm.");
+    }
+
+    /* center the text */
+    x = (SCREEN_WIDTH / 2) - (strlen(prompt) * 8) / 2;
+
+    plot_string(base, 150, x, prompt);
 }
 
 /* change detection */

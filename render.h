@@ -54,13 +54,15 @@ void render_dealer_value(const Dealer *dealer, UINT8 *base);
 void render_dealer_cards(const Dealer *dealer, UINT8 *base);
 
 
-/* timer rendering */
+/* timer and prompt rendering */
 
 void render_timer(const Timer *timer, UINT8 *base);
 
 void render_timer_text(const Timer *timer, UINT8 *base);
 
 void render_timer_tick(const Timer *timer, UINT8 *base);
+
+void render_prompts(Model *game, UINT8 *base);
 
 /* change detection */
 

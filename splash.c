@@ -3,6 +3,8 @@
 #include "raster.h"
 #include "bmaps.h"
 #include "types.h"
+#include "music.h"
+#include "time.h"
 #include <osbind.h>
 #include <stdio.h>
 
@@ -13,6 +15,7 @@
 int splash_screen() 
 {
     UINT8 *base;
+    UINT32 timenow, timethen, timeElapsed;
     int choice;
     int running;
 
@@ -23,8 +26,15 @@ int splash_screen()
 
     draw_splash_screen(base);
 
+    timethen = get_time();
+    timenow = get_time();
+    start_music();
+
     while (running) 
     {
+        update_music(timenow);
+        timenow = get_time();
+        timeElapsed = timenow - timethen;
         if (has_input()) 
         {
             char input;
@@ -42,6 +52,10 @@ int splash_screen()
             {
                 return 2; /* quit */
             }
+        }
+
+        if(timeElapsed > 0) {
+            timethen = timenow;
         }
     }
 }

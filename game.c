@@ -11,6 +11,8 @@
 #include "handle.h"
 #include "time.h"
 #include "splash.h"
+#include "music.h"
+#include "effects.h"
 #include <stdio.h>
 
 #define SCREEN_WIDTH 640
@@ -98,6 +100,7 @@ int main() {
             swap_buffer();
             swap_snapshots();
 
+            update_music(timenow);
             timethen = timenow;
         }
     }
