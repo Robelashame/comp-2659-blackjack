@@ -2,6 +2,7 @@
 #include "render.h"
 #include <string.h>
 
+#define SCREEN_WIDTH 640
 
 void handle_input(Model *game, char cin, int in_prog)
 {
@@ -103,6 +104,8 @@ void update_model(Model *game, int *in_prog)
 
 void prompts(Model *game, UINT8 *base) {
     char prompt[100];
+    int x;
+
     strcpy(prompt, "");  /* default to empty */
 
     if (game->player1_turn) {
@@ -133,5 +136,8 @@ void prompts(Model *game, UINT8 *base) {
         strcpy(prompt, "Press w to increase bet, s to decrease, c to confirm.");
     }
 
-    plot_string(base, 150, 200, prompt);
+    /* center the text */
+    x = (SCREEN_WIDTH / 2) - (strlen(prompt) * 8) / 2;
+
+    plot_string(base, 150, x, prompt);
 }

@@ -25,7 +25,8 @@ RenderSnapshot back_snapshot;
 static UINT8 *original_screen = 0;  /*this stuff too*/
 static UINT8 *front_buffer = 0;
 static UINT8 *back_buffer = 0;
-static UINT8 *raw_buffer = 0;
+static UINT8 *raw_buffer1 = 0;
+static UINT8 *raw_buffer2 = 0;
 
 static void init_buffer();
 static void swap_buffer();
@@ -56,13 +57,11 @@ int main() {
     initialize_game(game, choice);
     init_buffer();
 
-    clear_screen(front_buffer);
-
     /*Draws first frame*/
-    clear_screen(back_buffer);
-    render(game, back_buffer);
-    create_snapshot(game, &back_snapshot);
-    create_snapshot(game, &front_snapshot);
+
+    draw_full_frame(game, front_buffer, &front_snapshot);
+    draw_full_frame(game, back_buffer, &back_snapshot);
+
     timenow = get_time();
     Setscreen(-1, back_buffer, -1);
     wait_vbl(timenow);
@@ -87,11 +86,17 @@ int main() {
         if (timeElapsed > 0)
         {
             update_model(game, &in_prog);
-            prompts(game, back_buffer);
-            render_min(game, &back_snapshot, back_buffer);
+
+            if (in_prog) {
+                draw_full_frame(game, back_buffer, &back_snapshot);
+            } else {
+                render_min(game, &back_snapshot, back_buffer);
+            }
+
             Setscreen(-1, back_buffer, -1);
             wait_vbl(timenow);
             swap_buffer();
+            swap_snapshots();
 
             timethen = timenow;
         }
@@ -101,19 +106,28 @@ int main() {
     return 0;
 }
 
+static void draw_full_frame(const Model *game, UINT8 *buffer, RenderSnapshot *snap) {
+    clear_screen(buffer);
+    render(game, buffer);
+    prompts(game, buffer);
+    create_snapshot(game, snap);
+}
+
 /*below this stuff as well*/
 static void init_buffer() {
     if (original_screen == 0) 
 {
         original_screen = (UINT8 *)Physbase();
-        front_buffer = original_screen;
-        raw_buffer = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
+        
+        raw_buffer1 = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
+        raw_buffer2 = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
         /* malloc gives a random memory address and we need it 256 byte aligned */
         /* first we convert it to a pointer because we can't use arithmatic on it */
         /* then we add 255 because if we round the memory address down without it, it can skip the address by 255 bytes */
         /* so we guarantee that when rounding down we are within our allocated size, which is also why we give it 255 more bytes when allocating */
         /* and then you round off the last 2 bytes since that will make it always a multiple of 256 */
-        back_buffer = (UINT8 *)(((long)raw_buffer + (ALIGNMENT - 1)) & 0xFFFFFF00);
+        front_buffer = (UINT8 *)(((long)raw_buffer1 + (ALIGNMENT - 1)) & 0xFFFFFF00);
+        back_buffer = (UINT8 *)(((long)raw_buffer2 + (ALIGNMENT - 1)) & 0xFFFFFF00);
     }
 }
 
@@ -125,12 +139,20 @@ static void swap_buffer() {
     back_buffer = temp;
 }
 
+static void swap_snapshots() {
+    RenderSnapshot temp = front_snapshot;
+    front_snapshot = back_snapshot;
+    back_snapshot = temp;
+}
+
 /* unsure if necessary but here for now */
 static void clear_buffer() {
-    if (raw_buffer != 0) 
+    if ((raw_buffer1 || raw_buffer2) != 0) 
     {
-        free(raw_buffer);
-        raw_buffer = 0;
+        free(raw_buffer1);
+        raw_buffer1 = 0;
+        free(raw_buffer2);
+        raw_buffer2 = 0;
     }
 
     front_buffer = 0;
