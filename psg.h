@@ -22,4 +22,10 @@ void enable_channel(int channel, int tone_on, int noise_on);
 /* Stops all PSG sound production. */
 void stop_sound();
 
+/* Loads the noise register with the givern tuning. */
+void set_noise(int tuning);
+
+/* Loads the PSG envelope control registers with the given envelope shape and 16-bit sustain. */
+void set_envelope(int shape, unsigned int sustain);
+
 #endif

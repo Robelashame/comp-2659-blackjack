@@ -6,15 +6,13 @@
 #define PSG_REG_SELECT  ((volatile unsigned char *)0xFF8800)
 #define PSG_REG_WRITE   ((volatile unsigned char *)0xFF8802)
 
-#define CHANNEL_A 0
-#define CHANNEL_B 1
-#define CHANNEL_C 2
-
 #define MIXER_REG 7
 
 void write_psg(int reg, UINT8 val)
 {
     long old_ssp = Super(0);
+
+    if(reg < 0 || reg > 15) return;
 
     *PSG_REG_SELECT = reg;
     *PSG_REG_WRITE = val;
@@ -44,7 +42,7 @@ void set_tone(int channel, int tuning)
 
     if(tuning < 0 || tuning > 255) return;
 
-    write_psg(channel, tunning);
+    write_psg(channel, tuning);
 }
 
 
@@ -90,5 +88,24 @@ void stop_sound()
     write_psg(8, 0);     /* Volume A */
     write_psg(9, 0);     /* Volume B */
     write_psg(10, 0);    /* Volume C */
+}
+
+
+void set_noise(int tuning)
+{
+    if(tuning < 0 || tuning > 31) return;
+
+    write_psg(6, tuning & 0x1F);
+}
+
+
+void set_envelope(int shape, unsigned int sustain)
+{
+    if(shape < 0 || shape > 15) return;
+
+    write_psg(11, sustain & 0xFF);        
+    write_psg(12, (sustain >> 8) & 0xFF);
+
+    write_psg(13, shape);
 }
 

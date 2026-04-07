@@ -77,29 +77,7 @@ int main()
 
 	stop_sound();
 	clear_screen(base);
-	plot_string(base, 50, 50, "Press Key to test music playing");
-
-	Cnecin();
-
-	timenow = get_time();
-	start_music();
-
-	while(!Cconis())
-	{
-		timenow = get_time();
-		update_music(timenow);
-	}
-	Cnecin();
-
-	stop_sound();
-	clear_screen(base);
-	plot_string(base, 50, 50, "Play Woosh Sound Effect");
-
-	while (!Cconis())
-	{
-
-	}
-	Cnecin();
+	plot_string(base, 50, 50, "Testing woosh effect sound");
 
 	timenow = get_time();
 	play_effect_woosh();
@@ -112,17 +90,27 @@ int main()
 
 	stop_sound();
 	clear_screen(base);
-	plot_string(base, 50, 50, "Play Hit Sound Effect");
-	while (!Cconis())
-	{
+	plot_string(base, 50, 50, "Testing hit effect sound");
 
-	}
-	Cnecin();
-
+	timenow = get_time();
 	play_effect_hit();
 	while (!Cconis())
 	{
+		timenow = get_time();
+		update_effects(timenow);
+	}
+	Cnecin();
 
+	stop_sound();
+	clear_screen(base);
+	plot_string(base, 50, 50, "Testing music");
+	timenow = get_time();
+	start_music();
+
+	while(!Cconis())
+	{
+		timenow = get_time();
+		update_music(timenow);
 	}
 	Cnecin();
 
