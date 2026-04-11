@@ -38,15 +38,12 @@ int main() {
     int in_prog;
     char key;
     int action;
-    long old_ssp;
     Model *game;
     
     in_prog = 0;
     timethen = get_time();
 
     game = &model;
-
-    old_ssp = Super(0);
 
     initialize_game(game, 0);
     init_buffer();
@@ -90,7 +87,6 @@ int main() {
 
     restore_screen();
     clear_buffer();
-    Super(old_ssp);
     return 0;
 }
 
