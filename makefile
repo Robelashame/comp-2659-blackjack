@@ -12,7 +12,8 @@ SRCS = asynch.c bmaps.c card.c cond.c dealer.c deck.c font.c \
 # Object files
 OBJS = asynch.o bmaps.o card.o cond.o dealer.o deck.o font.o \
        game.o hand.o handle.o input.o model.o player.o \
-       raster.o render.o synch.o time.o timer.o
+       raster.o render.o synch.o time.o timer.o \
+       RAST_ASM.o
 
 # Output
 TARGET = game.prg
@@ -27,6 +28,9 @@ $(TARGET): $(OBJS)
 # Compile
 .c.o:
 	$(CC) $(CFLAGS) -c $<
+
+RAST_ASM.o: RAST_ASM.S
+	gen -L2 RAST_ASM.S
 
 # Clean
 clean:

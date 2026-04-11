@@ -1,17 +1,19 @@
-			xdef		_plot_something_2
+	xdef	_set_video_base
 
-; [TO DO] delete this example function
 
-y			equ		14
-x			equ		12
-base			equ		8
 
-_plot_something_2:	link		a6,#0
-			movea.l		base(a6),a0
-			move.w		x(a6),d0
-			move.w		y(a6),d1
-		;	...		...
-			unlk		a6
-			rts
+; set_video_base, replaces set screen
 
-; recall: cc68x assumes d0-2/a0-2 are *not* preserved across subroutine calls!
+BASE	equ	8
+
+_set_video_base:
+	link	a6,#0
+	movem.l	d0-d2/a0-a2,-(sp)
+	move.l	BASE(a6),d0
+	lsr.l #8,d0
+	lea	$FF8201,a0
+	movep.w d0,(a0)
+	movem.l	(sp)+,d0-d2/a0-a2
+	unlk	a6
+	rts
+

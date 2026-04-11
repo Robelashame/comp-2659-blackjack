@@ -326,3 +326,15 @@ void plot_string(UINT8 *base, int row, int col, char *str)
         str++;
     }
 }
+
+UINT16 *get_video_base() {
+    volatile unsigned char *high = (volatile unsigned char *)0xFF8201;
+    volatile unsigned char *mid  = (volatile unsigned char *)0xFF8203;
+
+    unsigned long address;
+
+    address = ((unsigned long)(*high) << 16) |
+              ((unsigned long)(*mid)  << 8);
+
+    return (UINT16 *)address;
+}

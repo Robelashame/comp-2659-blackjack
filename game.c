@@ -50,7 +50,7 @@ int main() {
     clear_screen(back_buffer);
     render(game, back_buffer);
     timenow = get_time();
-    Setscreen(-1, back_buffer, -1);
+    set_video_base((UINT16 *)back_buffer);
     wait_vbl(timenow);
     swap_buffer();
 
@@ -75,7 +75,7 @@ int main() {
             clear_screen(back_buffer);
             prompts(game, back_buffer);
             render(game, back_buffer);
-            Setscreen(-1, back_buffer, -1);
+            set_video_base((UINT16 *)back_buffer);
             wait_vbl(timenow);
             swap_buffer();
 
@@ -92,7 +92,7 @@ int main() {
 static void init_buffer() {
     if (original_screen == 0) 
 {
-        original_screen = (UINT8 *)Physbase();
+        original_screen = (UINT8 *)get_video_base();
         front_buffer = original_screen;
         raw_buffer = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
         /* malloc gives a random memory address and we need it 256 byte aligned */
@@ -135,17 +135,17 @@ static void test_swap() {
     plot_string(back_buffer, 100, 140, "BACK BUFFER");
 
     /* start on original visible screen */
-    Setscreen(-1, front_buffer, -1);
+    set_video_base((UINT16 *)front_buffer);
     Cnecin();
 
     /* flip to back buffer */
     swap_buffer();
-    Setscreen(-1, front_buffer, -1);
+    set_video_base((UINT16 *)front_buffer);
     Cnecin();
 
     /* flip back to the other buffer */
     swap_buffer();
-    Setscreen(-1, front_buffer, -1);
+    set_video_base((UINT16 *)front_buffer);
     Cnecin();
 
     /* restore original TOS screen before exit */
@@ -153,5 +153,5 @@ static void test_swap() {
 }
 
 static void restore_screen() {
-    Setscreen(-1, original_screen, -1);
+    set_video_base((UINT16 *)original_screen);
 }
