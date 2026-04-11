@@ -30,18 +30,23 @@ static void swap_buffer();
 static void clear_buffer();
 static void test_swap();
 static void restore_screen();
+static void set_video_base_safe(UINT16 *base);
+static UINT16 *get_video_base_safe(void);
 
 int main() {
     UINT32 timenow, timethen, timeElapsed;
     int in_prog;
     char key;
     int action;
+    long old_ssp;
     Model *game;
     
     in_prog = 0;
     timethen = get_time();
 
     game = &model;
+
+    old_ssp = Super(0);
 
     initialize_game(game, 0);
     init_buffer();
@@ -50,7 +55,7 @@ int main() {
     clear_screen(back_buffer);
     render(game, back_buffer);
     timenow = get_time();
-    set_video_base((UINT16 *)back_buffer);
+    set_video_base_safe((UINT16 *)back_buffer);
     wait_vbl(timenow);
     swap_buffer();
 
@@ -75,7 +80,7 @@ int main() {
             clear_screen(back_buffer);
             prompts(game, back_buffer);
             render(game, back_buffer);
-            set_video_base((UINT16 *)back_buffer);
+            set_video_base_safe((UINT16 *)back_buffer);
             wait_vbl(timenow);
             swap_buffer();
 
@@ -85,6 +90,7 @@ int main() {
 
     restore_screen();
     clear_buffer();
+    Super(old_ssp);
     return 0;
 }
 
@@ -92,7 +98,7 @@ int main() {
 static void init_buffer() {
     if (original_screen == 0) 
 {
-        original_screen = (UINT8 *)get_video_base();
+        original_screen = (UINT8 *)get_video_base_safe();
         front_buffer = original_screen;
         raw_buffer = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
         /* malloc gives a random memory address and we need it 256 byte aligned */
@@ -135,17 +141,17 @@ static void test_swap() {
     plot_string(back_buffer, 100, 140, "BACK BUFFER");
 
     /* start on original visible screen */
-    set_video_base((UINT16 *)front_buffer);
+    set_video_base_safe((UINT16 *)front_buffer);
     Cnecin();
 
     /* flip to back buffer */
     swap_buffer();
-    set_video_base((UINT16 *)front_buffer);
+    set_video_base_safe((UINT16 *)front_buffer);
     Cnecin();
 
     /* flip back to the other buffer */
     swap_buffer();
-    set_video_base((UINT16 *)front_buffer);
+    set_video_base_safe((UINT16 *)front_buffer);
     Cnecin();
 
     /* restore original TOS screen before exit */
@@ -153,5 +159,23 @@ static void test_swap() {
 }
 
 static void restore_screen() {
-    set_video_base((UINT16 *)original_screen);
+    set_video_base_safe((UINT16 *)original_screen);
+}
+
+static void set_video_base_safe(UINT16 *base) {
+    long old_ssp;
+
+    old_ssp = Super(0);
+    set_video_base(base);
+    Super(old_ssp);
+}
+
+static UINT16 *get_video_base_safe(void) {
+    long old_ssp;
+    UINT16 *base;
+
+    old_ssp = Super(0);
+    base = get_video_base();
+    Super(old_ssp);
+    return base;
 }
