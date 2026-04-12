@@ -15,9 +15,11 @@ void test_game_start(Model *game) {
     Dealer *game_dealer;
     Deck *shoe;
 
-    initialize_game(game);
+    initialize_game(game, 0);
 
     test_two_player(game);
+
+    give_start_cards(game);
 
     plr_1_hand = &game->player1.hand;
     game_dealer = &game->dealer;

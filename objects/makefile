@@ -1,40 +1,30 @@
-#Copy the below into Makefile for the objects for atari, leave same for this one.
-testmo: test.o testmo.o model.o player.o dealer.o deck.o hand.o card.o timer.o asynch.o cond.o
-	cc68x -g test.o testmo.o model.o player.o dealer.o deck.o hand.o card.o timer.o asynch.o cond.o -o testmo
+#this is for the testmodel test.c in vs code, there is one for steem emulator just rename to makefile
+CC = clang
 
+CFLAGS = -Wall -Wextra -std=c11
 
-test.o: test.c testmo.h
-	cc68x -g -c test.c
+TARGET = test
 
-testmo.o: testmo.c testmo.h model.h asynch.h synch.h cond.h
-	cc68x -g -c testmo.c
+SRCS = \
+	asynch.c \
+	card.c \
+	cond.c \
+	dealer.c \
+	deck.c \
+	hand.c \
+	model.c \
+	player.c \
+	timer.c \
+	testmo.c \
+	test.c
 
-model.o: model.c model.h player.h dealer.h deck.h timer.h
-	cc68x -g -c model.c
+OBJS = $(SRCS:.c=.o)
 
-player.o: player.c player.h hand.h deck.h
-	cc68x -g -c player.c
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) -o $(TARGET)
 
-dealer.o: dealer.c dealer.h hand.h deck.h card.h
-	cc68x -g -c dealer.c
-
-deck.o: deck.c deck.h card.h
-	cc68x -g -c deck.c
-
-hand.o: hand.c hand.h card.h
-	cc68x -g -c hand.c
-
-card.o: card.c card.h
-	cc68x -g -c card.c
-
-timer.o: timer.c timer.h
-	cc68x -g -c timer.c
-
-asynch.o: asynch.c asynch.h model.h
-	cc68x -g -c asynch.c
-
-cond.o: cond.c cond.h asynch.h model.h
-	cc68x -g -c cond.c
+%.o: %.c
+	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f *.o testmo
+	rm -f $(OBJS) $(TARGET)
