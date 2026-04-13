@@ -17,6 +17,40 @@ static int s_prev_x = 320, s_prev_y = 200;
 /* Call for ISR. */
 void input_mouse_on_ikbd_byte(UINT8 b);
 
+void input_ikbd_handler(void);
+
+extern void input_ikbd_isr(void);
+
+#define IKBD_VECTOR 70
+typedef void (*Vector)();
+
+static void (*old_ikbd_vector)(void);
+Vector old_ikbd;
+
+Vector install_vector(int num, Vector handler);
+
+void input_mouse_init(void)
+{
+    long old_ssp;
+
+    volatile UINT8 *status = (volatile UINT8*)0xFFFFFC00;
+    volatile UINT8 *data   = (volatile UINT8*)0xFFFFFC02;
+
+    old_ssp = Super(0);
+
+    /* flush */
+    while (*status & 0x01)
+        (void)*data;
+
+    old_ikbd = install_vector(IKBD_VECTOR, input_ikbd_isr);
+
+    /* enable mouse */
+    while (!(*status & 0x02));
+    *data = 0x08;
+
+    Super(old_ssp);
+}
+
 /* Helper function for clamping, idk if needed.*/
 static int clamp(int value, int low, int high)
 {
@@ -33,6 +67,18 @@ char get_input() {
     char in;
     in = Cconin();
     return (char)in;
+}
+
+void input_ikbd_handler(void)
+{
+    volatile UINT8 *status = (volatile UINT8*)0xFFFFFC00;
+    volatile UINT8 *data   = (volatile UINT8*)0xFFFFFC02;
+
+    while (*status & 0x01)
+    {
+        UINT8 byte = *data;
+        input_mouse_on_ikbd_byte(byte);
+    }
 }
 
 void input_mouse_on_ikbd_byte(UINT8 b)
@@ -92,4 +138,26 @@ void update_mouse(MouseState *mouse)
     s_prev_buttons = b;
     s_prev_x = x;
     s_prev_y = y;
+}
+
+void input_mouse_shutdown(void)
+{
+    long old_ssp;
+
+    old_ssp = Super(0);
+
+    install_vector(IKBD_VECTOR, old_ikbd);
+
+    Super(old_ssp);
+}
+
+Vector install_vector(int num, Vector vector)
+{
+    Vector orig;
+    Vector *vectp = (Vector *)((long)num << 2);
+    long old_ssp = Super(0);
+    orig = *vectp;
+    *vectp = vector;
+    Super(old_ssp);
+    return orig;
 }
