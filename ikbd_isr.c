@@ -1,4 +1,5 @@
 #include "input.h"
+#include "ikbdlow.h"
 
 /* Save old handler */
 static void (*old_ikbd_isr)(void) = 0;

@@ -53,5 +53,7 @@ void update_mouse(MouseState *state);
  OUTPUT: None
 */
 void input_mouse_init(void); 
+void input_mouse_shutdown(void);
+void input_mouse_on_ikbd_byte(UINT8 b);
 
 #endif
