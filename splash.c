@@ -12,6 +12,8 @@
 #define KEY_TWO '2'
 #define KEY_Q 'q'
 
+static void draw_mouse_debug(UINT8 *base, const MouseState *ms);
+
 int splash_screen() 
 {
     UINT8 *base;
@@ -39,6 +41,7 @@ int splash_screen()
         timeElapsed = timenow - timethen;
         
         update_mouse(&ms);
+        draw_mouse_debug(base, &ms);
 
         if (has_input()) 
         {
@@ -47,14 +50,17 @@ int splash_screen()
 
             if (input == KEY_ONE) 
             {
+                input_mouse_shutdown();
                 return 0; /* single player mode */
             }
             else if (input == KEY_TWO)
             {
+                input_mouse_shutdown();
                 return 1; /* two player mode */
             }
             else if (input == KEY_Q)
             {
+                input_mouse_shutdown();
                 return 2; /* quit */
             }
         }
@@ -64,6 +70,24 @@ int splash_screen()
         }
     }
 }
+
+static void draw_mouse_debug(UINT8 *base, const MouseState *ms)
+{
+    char line1[40];
+    char line2[40];
+
+    if (!ms) return;
+
+    sprintf(line1, "Mouse x:%3d y:%3d", ms->x, ms->y);
+    sprintf(line2, "Buttons:%d P:%d R:%d M:%d",
+            ms->buttons, ms->pressed, ms->released, ms->moved);
+
+    plot_string(base, 170, 12, "                                    ");
+    plot_string(base, 180, 12, "                                    ");
+    plot_string(base, 170, 12, line1);
+    plot_string(base, 180, 12, line2);
+}
+
 
 static void draw_splash_screen(UINT8 *base)
 {

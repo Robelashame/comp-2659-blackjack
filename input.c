@@ -1,4 +1,5 @@
 #include "input.h"
+#include "raster.h"
 
 /* Shared states written by ISR. */
 volatile int g_mouse_x = 320;
@@ -21,13 +22,9 @@ void input_ikbd_handler(void);
 
 extern void input_ikbd_isr(void);
 
-#define IKBD_VECTOR 70
-typedef void (*Vector)();
-
-static void (*old_ikbd_vector)(void);
-Vector old_ikbd;
-
-Vector install_vector(int num, Vector handler);
+#define IKBD_CTRL_DISABLE_RX_IRQ ((UINT8)0x16)
+#define IKBD_CTRL_ENABLE_RX_IRQ  ((UINT8)0x96)
+static void poll_ikbd_bytes(void);
 
 void input_mouse_init(void)
 {
@@ -35,18 +32,23 @@ void input_mouse_init(void)
 
     volatile UINT8 *status = (volatile UINT8*)0xFFFFFC00;
     volatile UINT8 *data   = (volatile UINT8*)0xFFFFFC02;
+    volatile UINT8 *control = (volatile UINT8*)0xFFFFFC00;
 
     old_ssp = Super(0);
+    *control = IKBD_CTRL_DISABLE_RX_IRQ;
 
     /* flush */
     while (*status & 0x01)
         (void)*data;
+    
+    Super(old_ssp);
 
-    old_ikbd = install_vector(IKBD_VECTOR, input_ikbd_isr);
 
     /* enable mouse */
+    old_ssp = Super(0);
     while (!(*status & 0x02));
     *data = 0x08;
+    *control = IKBD_CTRL_ENABLE_RX_IRQ;
 
     Super(old_ssp);
 }
@@ -74,7 +76,7 @@ void input_ikbd_handler(void)
     volatile UINT8 *status = (volatile UINT8*)0xFFFFFC00;
     volatile UINT8 *data   = (volatile UINT8*)0xFFFFFC02;
 
-    while (*status & 0x01)
+    if (*status & 0x01)
     {
         UINT8 byte = *data;
         input_mouse_on_ikbd_byte(byte);
@@ -116,17 +118,18 @@ void input_mouse_on_ikbd_byte(UINT8 b)
 
 void update_mouse(MouseState *mouse)
 {
-    long old_ssp;
+
     int x, y;
     UINT8 b;
 
     if (!mouse) return;
 
-    old_ssp = Super(0);
+    poll_ikbd_bytes();
+
     x = g_mouse_x;
     y = g_mouse_y;
     b = g_mouse_buttons;
-    Super(old_ssp);
+
 
     mouse->x = x;
     mouse->y = y;
@@ -142,22 +145,16 @@ void update_mouse(MouseState *mouse)
 
 void input_mouse_shutdown(void)
 {
-    long old_ssp;
-
-    old_ssp = Super(0);
-
-    install_vector(IKBD_VECTOR, old_ikbd);
-
-    Super(old_ssp);
+    
 }
 
-Vector install_vector(int num, Vector vector)
+static void poll_ikbd_bytes(void)
 {
-    Vector orig;
-    Vector *vectp = (Vector *)((long)num << 2);
-    long old_ssp = Super(0);
-    orig = *vectp;
-    *vectp = vector;
-    Super(old_ssp);
-    return orig;
+    volatile UINT8 *status = (volatile UINT8*)0xFFFFFC00;
+    volatile UINT8 *data   = (volatile UINT8*)0xFFFFFC02;
+
+    while (*status & 0x01)
+    {
+        input_mouse_on_ikbd_byte(*data);
+    }
 }
