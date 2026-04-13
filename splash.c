@@ -16,6 +16,7 @@ int splash_screen()
 {
     UINT8 *base;
     UINT32 timenow, timethen, timeElapsed;
+    MouseState ms;
     int choice;
     int running;
 
@@ -24,6 +25,7 @@ int splash_screen()
 
     base = (UINT8 *)Physbase();
 
+    input_mouse_init();
     draw_splash_screen(base);
 
     timethen = get_time();
@@ -31,10 +33,13 @@ int splash_screen()
     start_music();
 
     while (running) 
-    {
+    {   
         update_music(timenow);
         timenow = get_time();
         timeElapsed = timenow - timethen;
+        
+        update_mouse(&ms);
+
         if (has_input()) 
         {
             char input;

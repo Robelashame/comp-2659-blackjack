@@ -2,6 +2,16 @@
 #define INPUT_H
 
 #include <osbind.h>
+#include "types.h"
+
+typedef struct {
+       int x;
+       int y;
+       UINT8 buttons;
+       UINT8 pressed;
+       UINT8 released;
+       UINT8 moved;
+} MouseState;
 
 /*----- Function: has_input -----
 
@@ -23,5 +33,25 @@ int has_input();
  OUTPUT: Returns a single character.
 */
 char get_input();
+
+/*----- Function: update_mouse -----
+
+ PURPOSE: Updates the mouse once and updates the local struct.
+
+ INPUT: None
+
+ OUTPUT: None
+*/
+void update_mouse(MouseState *state);
+
+/*----- Function: input_mouse_init -----
+
+ PURPOSE: Installs the ISR and connects to the source.
+
+ INPUT: None
+
+ OUTPUT: None
+*/
+void input_mouse_init(void); 
 
 #endif
