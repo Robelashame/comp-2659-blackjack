@@ -20,6 +20,8 @@
  /* taking the inverse of this gives you, to clear it */ 
  /* 11101111 */ 
 
+static void clear_horizontal_line(UINT32 *base, int row, int col, UINT16 length);
+
 void clear_screen(UINT32 *base)
 {
     int i;
@@ -33,26 +35,11 @@ void clear_screen(UINT32 *base)
 void clear_region(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 {
     UINT8 *base8;
-    UINT8 mask;
-    UINT16 yEnd, xEnd;
-    UINT32 byteOffset;
-    int r, c;
+    int r;
 
     base8 = (UINT8 *)base;
-
-    yEnd = row + length;
-    xEnd = col + width;
-
-    if (row < 0 || col < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH) return;
-    if (yEnd > SCREEN_HEIGHT) yEnd = SCREEN_HEIGHT;
-    if (xEnd > SCREEN_WIDTH) xEnd = SCREEN_WIDTH;
-
-    for(r = row; r < yEnd; r++) {                
-        for(c = col; c < xEnd; c++) {            
-            byteOffset = r * SCREEN_WIDTH_BYTES + (c >> 3);      /* find byte */
-            mask = 0x01 << (7 - (c & 7));          /* find bit */
-            base8[byteOffset] &= (UINT8)~mask;   /* clear bit */
-        }   
+    for(r = row; r < row + length; r++) {                
+        clear_horizontal_line(base, r, col, width);
     }
 }
 
@@ -73,12 +60,7 @@ void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
     UINT8 *cur_addr;
     UINT16 remaining_pixels;
     UINT8 *byte_base = (UINT8 *)base;
-    
-    /* Adress calculations and byte offset calculate, also take note of remaining pixels to draw. */
 
-    UINT8 *cur_addr = (byte_base + row * SCREEN_WIDTH_BYTES + (col >> 3));
-    remaining_pixels = length;
-    bit_offset = col & 7;
     /* Out of bounds checking */
     if(row < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || (col + length) <= 0 || length <= 0)
     {
@@ -100,6 +82,11 @@ void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
     {
         return;
     }
+
+    /* Address calculations and byte offset calculate, also take note of remaining pixels to draw. */
+    cur_addr = (byte_base + row * SCREEN_WIDTH_BYTES + (col >> 3));
+    remaining_pixels = length;
+    bit_offset = col & 7;
 
     /* Handle first partial byte writting */
     /* If the remainder of the byte is not zero then a partial byte is needed to be masked.*/
@@ -144,11 +131,43 @@ void plot_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
 
 void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
 {
-    int i;
-    UINT8 *byte_base = (UINT8 *)base;
-    for(i = 0; i < length; i++)
+    int i, len;
+    UINT8 *cur_addr;
+    UINT8 bit_mask;
+    UINT8 *base8 = (UINT8 *)base;
+    len = (int)length;
+    
+    /* Out of bounds checking */
+    if(col < 0 || col >= SCREEN_WIDTH || row >= SCREEN_HEIGHT || (row + len) <= 0 || len <= 0)
     {
-        plot_pixel(byte_base, row + i, col);
+        return;
+    }
+
+    /* Top clipping */
+    if(row < 0)
+    {
+        len += row;
+        row = 0;
+    }
+
+    /* Bottom clipping */
+    if((row + len) > SCREEN_HEIGHT)
+    {
+        len = SCREEN_HEIGHT - row;
+    }
+
+    if(len <= 0)
+    {
+        return;
+    }
+
+    cur_addr = (base8 + row * SCREEN_WIDTH_BYTES + (col >> 3));
+    bit_mask = 1 << (7 - (col & 7));
+
+    for(i = 0; i < len; i++)
+    {
+        *cur_addr |= bit_mask;
+        cur_addr += SCREEN_WIDTH_BYTES;
     }
 }
 
@@ -156,11 +175,15 @@ void plot_vertical_line(UINT32 *base, int row, int col, UINT16 length)
 /* Bresenham calculates the ideal mathematical line and keeps math to only interger addition and subtraction, no floats so math is faster */
 /* Instead of calculating the slope each time, we calculate the error, this tells us how much we are above or below the true line */
 /* if dy = 1, and dx = 2, slope = 1/2 = 0.5, which means for every 2 steps in x, we take 1 step in y, but instead we use 0-2 so no float numbers*/
-/*  */
 void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_col)
 {
     UINT8 *base8 = (UINT8 *)base;
     int x0, x1, y0, y1, dx, dy, sx, sy, err, e2;
+
+    x0 = start_col;
+    x1 = end_col;
+    y0 = start_row;
+    y1 = end_row;
 
     /* difference between points, or the displacement between them */
     dy = y1 - y0;
@@ -247,15 +270,22 @@ void plot_triangle(UINT32 *base, int row, int col, UINT16 triangle_base, UINT16 
 
 void plot_8bit_bitmap(UINT8 *base, int row, int col, const UINT8 *bitmap, UINT16 height)
 {
-    int r, c;
+    int r, c, screen_row, screen_col;
     for(r = 0; r < height; r++)
     {
         for(c = 0; c < 8; c++)
         {
+            screen_row = row + r;
+            screen_col = col + c;
+            if (screen_row < 0 || screen_col < 0 || screen_row >= SCREEN_HEIGHT || screen_col >= SCREEN_WIDTH)
+            {
+                continue;
+            }
+                
             /* Check if the specific bit is set (1) */
             if(bitmap[r] & (1 << (7 - c)))
             {
-                plot_pixel(base, row + r, col + c);
+                *(base + screen_row * SCREEN_WIDTH_BYTES + (screen_col >> 3)) |= 1 << (7 - (screen_col & 7));
             }
         }
     }
@@ -263,17 +293,23 @@ void plot_8bit_bitmap(UINT8 *base, int row, int col, const UINT8 *bitmap, UINT16
 
 void plot_16bit_bitmap(UINT16 *base, int row, int col, const UINT16 *bitmap, UINT16 height)
 {
-    int r, c;
+    int r, c, screen_row, screen_col;
     UINT8 *base8 = (UINT8 *)base; 
-
-    for (r = 0; r < height; r++)
+    for(r = 0; r < height; r++)
     {
-        for (c = 0; c < 16; c++) 
+        for(c = 0; c < 16; c++)
         {
-            /* Correct: 0x8000 is the leftmost bit of a 16-bit word */
-            if (bitmap[r] & (0x8000 >> c))
+            screen_row = row + r;
+            screen_col = col + c;
+            if (screen_row < 0 || screen_col < 0 || screen_row >= SCREEN_HEIGHT || screen_col >= SCREEN_WIDTH)
             {
-                plot_pixel(base8, row + r, col + c);
+                continue;
+            }
+                
+            /* Check if the specific bit is set (1) */
+            if(bitmap[r] & (0x8000 >> c))
+            {
+                *(base8 + screen_row * SCREEN_WIDTH_BYTES + (screen_col >> 3)) |= 1 << (7 - (screen_col & 7));
             }
         }
     }
@@ -281,18 +317,23 @@ void plot_16bit_bitmap(UINT16 *base, int row, int col, const UINT16 *bitmap, UIN
 
 void plot_32bit_bitmap(UINT32 *base, int row, int col, const UINT32 *bitmap, UINT16 height)
 {
-    int r, c;
-    UINT8 *base8 = (UINT8 *)base; /* Cast to byte-pointer for plot_pixel */
-
-    for (r = 0; r < height; r++)
+    int r, c, screen_row, screen_col;
+    UINT8 *base8 = (UINT8 *)base; 
+    for(r = 0; r < height; r++)
     {
-        for (c = 0; c < 32; c++)
+        for(c = 0; c < 32; c++)
         {
-            /* Use 1UL to force 32-bit logic. 
-               We shift 1 left by (31 - c) to check bits from left-to-right. */
-            if (bitmap[r] & (1UL << (31 - c)))
+            screen_row = row + r;
+            screen_col = col + c;
+            if (screen_row < 0 || screen_col < 0 || screen_row >= SCREEN_HEIGHT || screen_col >= SCREEN_WIDTH)
             {
-                plot_pixel(base8, row + r, col + c);
+                continue;
+            }
+                
+            /* Check if the specific bit is set (1) */
+            if(bitmap[r] & (0x80000000UL >> c))
+            {
+                *(base8 + screen_row * SCREEN_WIDTH_BYTES + (screen_col >> 3)) |= 1 << (7 - (screen_col & 7));
             }
         }
     }
@@ -324,5 +365,74 @@ void plot_string(UINT8 *base, int row, int col, char *str)
         
         /* 4. Move our pointer to the next character in the string */
         str++;
+    }
+}
+
+static void clear_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
+{
+    int bit_offset;
+    UINT8 mask;
+    UINT8 *cur_addr;
+    UINT16 remaining_pixels;
+    UINT8 *byte_base = (UINT8 *)base;
+
+    /* Out of bounds checking / clipping first */
+    if (row < 0 || row >= SCREEN_HEIGHT || col >= SCREEN_WIDTH || (col + length) <= 0 || length <= 0)
+    {
+        return;
+    }
+
+    if (col < 0)
+    {
+        length += col;
+        col = 0;
+    }
+
+    if ((col + length) > SCREEN_WIDTH)
+    {
+        length = SCREEN_WIDTH - col;
+    }
+
+    if (length <= 0)
+    {
+        return;
+    }
+
+    /* Now calculate address info after clipping */
+    cur_addr = byte_base + row * SCREEN_WIDTH_BYTES + (col >> 3);
+    remaining_pixels = length;
+    bit_offset = col & 7;
+
+    /* Handle first partial byte */
+    if (bit_offset != 0)
+    {
+        if (remaining_pixels <= (8 - bit_offset))
+        {
+            mask = (UINT8)(0xFF >> bit_offset);
+            mask &= (UINT8)(0xFF << (8 - (bit_offset + remaining_pixels)));
+            *cur_addr &= (UINT8)(~mask);
+            return;
+        }
+
+        mask = (UINT8)(0xFF >> bit_offset);
+        *cur_addr &= (UINT8)(~mask);
+
+        remaining_pixels -= (8 - bit_offset);
+        cur_addr++;
+    }
+
+    /* Handle full bytes */
+    while (remaining_pixels >= 8)
+    {
+        *cur_addr = 0x00;
+        remaining_pixels -= 8;
+        cur_addr++;
+    }
+
+    /* Handle last partial byte */
+    if (remaining_pixels > 0)
+    {
+        mask = (UINT8)(0xFF << (8 - remaining_pixels));
+        *cur_addr &= (UINT8)(~mask);
     }
 }

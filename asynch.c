@@ -68,4 +68,3 @@ void bet_confirmed(Model *model) {
 void quit(Model *game) {
     game->is_game_over = TRUE;
 }
-

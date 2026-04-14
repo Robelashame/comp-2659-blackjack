@@ -10,47 +10,49 @@
 #include "TYPES.H"
 #include "handle.h"
 #include "time.h"
-
-
-
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 400
-#define SCREEN_SIZE ((SCREEN_WIDTH * SCREEN_HEIGHT) / 8) /*This stuff should be in nother file*/
-#define ALIGNMENT 256
+#include "splash.h"
+#include "music.h"
+#include "effects.h"
+#include "double.h"
+#include <stdio.h>
 
 Model model;
+RenderSnapshot front_snapshot;
+RenderSnapshot back_snapshot;
 
-static UINT8 *original_screen = 0;  /*this stuff too*/
-static UINT8 *front_buffer = 0;
-static UINT8 *back_buffer = 0;
-static UINT8 *raw_buffer = 0;
-
-static void init_buffer();
-static void swap_buffer();
-static void clear_buffer();
-static void test_swap();
-static void restore_screen();
+static void draw_full_frame(const Model *game, UINT8 *buffer, RenderSnapshot *snap);
+static void swap_snapshots();
 
 int main() {
     UINT32 timenow, timethen, timeElapsed;
-    int in_prog;
+    int in_prog, choice;
     char key;
     int action;
     Model *game;
-    
-    in_prog = 0;
+
+    Cconws("\033f");
+
     timethen = get_time();
-
+    in_prog = 0;
     game = &model;
+    
+    choice = splash_screen();
 
-    initialize_game(game, 0);
+    if (choice == 2)
+    {
+        return 0; /* quit game */
+    }
+
+    initialize_game(game, choice);
     init_buffer();
 
     /*Draws first frame*/
-    clear_screen(back_buffer);
-    render(game, back_buffer);
+
+    draw_full_frame(game, get_front_buffer(), &front_snapshot);
+    draw_full_frame(game, get_back_buffer(), &back_snapshot);
+
     timenow = get_time();
-    Setscreen(-1, back_buffer, -1);
+    Setscreen(-1, get_back_buffer(), -1);
     wait_vbl(timenow);
     swap_buffer();
 
@@ -72,86 +74,33 @@ int main() {
         if (timeElapsed > 0)
         {
             update_model(game, &in_prog);
-            clear_screen(back_buffer);
-            prompts(game, back_buffer);
-            render(game, back_buffer);
-            Setscreen(-1, back_buffer, -1);
+            render_min(game, &back_snapshot, get_back_buffer());
+
+            Setscreen(-1, get_back_buffer(), -1);
             wait_vbl(timenow);
             swap_buffer();
+            swap_snapshots();
 
+            update_music(timenow);
             timethen = timenow;
         }
     }
-
     restore_screen();
+    ending_screen();
+    Cnecin();
     clear_buffer();
     return 0;
 }
 
-/*below this stuff aswell*/
-static void init_buffer() {
-    if (original_screen == 0) 
-{
-        original_screen = (UINT8 *)Physbase();
-        front_buffer = original_screen;
-        raw_buffer = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
-        /* malloc gives a random memory address and we need it 256 byte aligned */
-        /* first we convert it to a pointer because we can't use arithmatic on it */
-        /* then we add 255 because if we round the memory address down without it, it can skip the address by 255 bytes */
-        /* so we guarantee that when rounding down we are within our allocated size, which is also why we give it 255 more bytes when allocating */
-        /* and then you round off the last 2 bytes since that will make it always a multiple of 256 */
-        back_buffer = (UINT8 *)(((long)raw_buffer + (ALIGNMENT - 1)) & 0xFFFFFF00);
-    }
+static void draw_full_frame(const Model *game, UINT8 *buffer, RenderSnapshot *snap) {
+    clear_screen((UINT32 *)buffer);
+    render(game, buffer);
+    render_prompts(game, buffer);
+    create_snapshot(game, snap);
 }
 
-static void swap_buffer() {
-    UINT8 *temp;
-
-    temp = front_buffer;
-    front_buffer = back_buffer;
-    back_buffer = temp;
-}
-
-/* unsure if necessary but here for now */
-static void clear_buffer() {
-    if (raw_buffer != 0) 
-    {
-        free(raw_buffer);
-        raw_buffer = 0;
-    }
-
-    front_buffer = 0;
-    back_buffer = 0;
-    original_screen = 0;
-}
-
-static void test_swap() {
-    init_buffer();
-
-    clear_screen(front_buffer);
-    plot_string(front_buffer, 100, 100, "FRONT BUFFER");
-
-    clear_screen(back_buffer);
-    plot_string(back_buffer, 100, 140, "BACK BUFFER");
-
-    /* start on original visible screen */
-    Setscreen(-1, front_buffer, -1);
-    Cnecin();
-
-    /* flip to back buffer */
-    swap_buffer();
-    Setscreen(-1, front_buffer, -1);
-    Cnecin();
-
-    /* flip back to the other buffer */
-    swap_buffer();
-    Setscreen(-1, front_buffer, -1);
-    Cnecin();
-
-    /* restore original TOS screen before exit */
-    restore_screen();
-}
-
-static void restore_screen() {
-    Setscreen(-1, original_screen, -1);
+static void swap_snapshots() {
+    RenderSnapshot temp = front_snapshot;
+    front_snapshot = back_snapshot;
+    back_snapshot = temp;
 }

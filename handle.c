@@ -2,6 +2,7 @@
 #include "render.h"
 #include <string.h>
 
+#define SCREEN_WIDTH 640
 
 void handle_input(Model *game, char cin, int in_prog)
 {
@@ -101,43 +102,4 @@ void update_model(Model *game, int *in_prog)
             game->outcome_applied = TRUE;
         }
     }
-}
-
-void prompts(Model *game, UINT8 *base) {
-    char prompt[100];
-    strcpy(prompt, "");  /* default to empty */
-
-    if (game->player1_turn) {
-        strcpy(prompt, "Press h to hit, s to stand.");
-    }
-    else if (game->dealer_turn) {
-        strcpy(prompt, "Dealer is playing.");
-    }
-    else if (game->is_round_over) {
-        /* Determine outcome for Player 1 */
-        if (game->player1.hand.value > 21) {
-            strcpy(prompt, "Player 1 busts. Dealer wins. Press c for new round.");
-        }
-        else if (game->dealer.hand.value > 21) {
-            strcpy(prompt, "Dealer busts. Player 1 wins. Press c for new round.");
-        }
-        else if (game->player1.hand.value > game->dealer.hand.value) {
-            strcpy(prompt, "Player 1 wins. Press c for new round.");
-        }
-        else if (game->player1.hand.value < game->dealer.hand.value) {
-            strcpy(prompt, "Dealer wins. Press c for new round.");
-        }
-        else {
-            strcpy(prompt, "Push. Press c for new round.");
-        }
-    }
-    else if (game->player1_bet) {
-        if (game->player1.bank == 0) {
-            strcpy(prompt, "You have no more money. You lose.");
-        }
-        else
-            strcpy(prompt, "Press w to increase bet, s to decrease, c to confirm.");
-    }
-
-    plot_string(base, 150, 200, prompt);
 }

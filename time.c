@@ -1,5 +1,4 @@
 #include "time.h"
-
 #include <osbind.h>
 
 UINT32 get_time() {

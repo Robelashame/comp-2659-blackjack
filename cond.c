@@ -91,4 +91,3 @@ void stop_time(Model *game) {
 void reset_time(Model *game) {
     reset_timer(&game->timer);
 }
-
