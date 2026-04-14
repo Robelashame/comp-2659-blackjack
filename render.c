@@ -35,6 +35,7 @@ void render_min(const Model *game, RenderSnapshot *snap, UINT8 *base) {
         render_player_bet(&game->player1, base);
     }
 
+    /* render_update_hand handles the clearing of cards also, since it's updating cards */
     if(player_cards_changed(game, snap)) {
         render_update_hand(&game->player1.hand, &snap->player1.hand, base);
     }
@@ -44,20 +45,13 @@ void render_min(const Model *game, RenderSnapshot *snap, UINT8 *base) {
         render_dealer_value(&game->dealer, base);
     }
 
-    if(dealer_cards_changed(game, snap)) {
-        if(snap->dealer.hidden_card.is_moving) {
+    if (dealer_cards_changed(game, snap)) {
+        if (memcmp(&snap->dealer.hidden_card, &game->dealer.hidden_card, sizeof(Card)) != 0) {
             clear_region(base, snap->dealer.hidden_card.position[0], snap->dealer.hidden_card.position[1], 80, 55);
-        }
-        if(game->dealer.hidden_card.is_moving) {
-            render_card(&game->dealer.hidden_card, base);
         }
 
         render_update_hand(&game->dealer.hand, &snap->dealer.hand, base);
-
-        if (!game->dealer.hidden_card.is_moving && !game->dealer.hidden_card.is_hidden) {
-        clear_region(base, snap->dealer.hidden_card.position[0], snap->dealer.hidden_card.position[1], 80, 55);
         render_dealer_cards(&game->dealer, base);
-    }
     }
 
     if(timer_changed(game, snap)) {
@@ -91,11 +85,15 @@ void create_snapshot(const Model *game, RenderSnapshot *snap) {
 }
 
 static void render_update_hand(const Hand *curr, const Hand *prev, UINT8 *base) {
-    clear_old_moving_cards(prev, base);
-
-    if (is_cards_moving(curr)) {
+    if (curr->num_of_cards != prev->num_of_cards) {
+        clear_hand_cards(prev, base);
+        render_hand(curr, base);
+    }
+    else if (is_cards_moving(curr)) {
+        clear_old_moving_cards(prev, base);
         render_moving_cards(curr, base);
-    } else {
+    }
+    else {
         clear_hand_cards(prev, base);
         render_hand(curr, base);
     }
@@ -293,11 +291,8 @@ int dealer_value_changed(const Model *game, RenderSnapshot *snap) {
 }
 
 int dealer_cards_changed(const Model *game, RenderSnapshot *snap) {
-    return snap->dealer.hand.num_of_cards != game->dealer.hand.num_of_cards ||
-           snap->dealer.hidden_card.is_hidden != game->dealer.hidden_card.is_hidden ||
-           snap->dealer.hidden_card.is_moving != game->dealer.hidden_card.is_moving ||
-           snap->dealer.hidden_card.position[0] != game->dealer.hidden_card.position[0] ||
-           snap->dealer.hidden_card.position[1] != game->dealer.hidden_card.position[1];
+    return memcmp(&snap->dealer.hand, &game->dealer.hand, sizeof(Hand)) != 0 ||
+           memcmp(&snap->dealer.hidden_card, &game->dealer.hidden_card, sizeof(Card)) != 0;
 }
 
 int timer_changed(const Model *game, RenderSnapshot *snap) {
@@ -328,9 +323,13 @@ void clear_player_bet(const Player *player, UINT8 *base) {
 }
 
 void clear_hand_cards(const Hand *hand, UINT8 *base) {
-    int i;
+    int i, row, col;
     for (i = 0; i < hand->num_of_cards; i++) {
-        clear_region(base, hand->cards[i].position[0], hand->cards[i].position[1], 80, 55);
+        row = hand->cards[i].position[0];
+        col = hand->cards[i].position[1];
+        if (row >= 0 && col >= 0 && row + 80 <= 400 && col + 55 <= 640) {
+            clear_region(base, row, col, 80, 55);
+        }
     }
 }
 
@@ -343,7 +342,7 @@ void clear_timer_tick(const Timer *timer, UINT8 *base) {
 }
 
 void clear_prompts(UINT8 *base) {
-    clear_region(base, 100, 100, 8, 400);
+    clear_region(base, 145, 0, 16, 640);
 }
 
 static void clear_old_moving_cards(const Hand *old_hand, UINT8 *base) {

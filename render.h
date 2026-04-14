@@ -1,7 +1,7 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "types.h"
+#include "TYPES.H"
 #include "raster.h"
 #include "model.h"
 #include "bmaps.h"

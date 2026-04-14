@@ -20,6 +20,8 @@
  /* taking the inverse of this gives you, to clear it */ 
  /* 11101111 */ 
 
+static void clear_horizontal_line(UINT32 *base, int row, int col, UINT16 length);
+
 void clear_screen(UINT32 *base)
 {
     int i;
@@ -37,7 +39,7 @@ void clear_region(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
 
     base8 = (UINT8 *)base;
     for(r = row; r < row + length; r++) {                
-        clear_horizontal_line(base8, r, col, width);
+        clear_horizontal_line(base, r, col, width);
     }
 }
 

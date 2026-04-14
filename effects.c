@@ -1,3 +1,4 @@
+#include "time.h"
 #include "types.h"
 #include <stdlib.h>
 #include <osbind.h>

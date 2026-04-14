@@ -1,7 +1,10 @@
 #ifndef SPLASH_H
 #define SPLASH_H
-#include "SPLASH.H"
+
+#include "types.h"
 
 int splash_screen();
+
+void ending_screen();
 
 #endif
