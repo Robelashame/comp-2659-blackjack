@@ -11,8 +11,12 @@
 void write_psg(int reg, UINT8 val)
 {
     long old_ssp = Super(0);
-
-    if(reg < 0 || reg > 15) return;
+    if(reg < 0 || reg > 15)
+    {
+        Super(old_ssp);
+        return;
+    }
+    
 
     *PSG_REG_SELECT = reg;
     *PSG_REG_WRITE = val;

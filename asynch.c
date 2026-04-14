@@ -4,7 +4,7 @@ void hit(Model *game) {
 
     Card dealt_card;
     dealt_card = deal(&game->deck);
-
+    play_effect_hit();
     if (game->player1_turn == TRUE) {
         add_card(&game->player1.hand, &dealt_card);
     }

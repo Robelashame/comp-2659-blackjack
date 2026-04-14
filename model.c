@@ -76,30 +76,35 @@ void give_start_cards(Model *game) {
     if (game->is_there_player2 == TRUE) {
         if (game->player1.hand.value == 0) {
             dealt_card = deal(&game->deck);    /*player 1 first card */
+            play_effect_woosh();
             add_card(&game->player1.hand, &dealt_card);
             return;
         }
 
         if (game->player2.hand.value == 0) {
             dealt_card = deal(&game->deck); /*player 2 first card */
+            play_effect_woosh();
             add_card(&game->player2.hand, &dealt_card);
             return;
         }
 
         if (game->dealer.hand.value == 0) {
             dealt_card = deal(&game->deck);
+            play_effect_woosh();
             add_card(&game->dealer.hand, &dealt_card);
             return;
         }
 
         if (game->player1.hand.num_of_cards == 1) {
         dealt_card = deal(&game->deck); /*player 1 second card */
+        play_effect_woosh();
         add_card(&game->player1.hand, &dealt_card);
         return;
         }
 
         if (game->player2.hand.num_of_cards == 1) {
         dealt_card = deal(&game->deck); /*player 2 second card */
+        play_effect_woosh();
         add_card(&game->player2.hand, &dealt_card);
         return;
         }
@@ -114,18 +119,21 @@ void give_start_cards(Model *game) {
     } else {
         if (game->player1.hand.value == 0) {
         dealt_card = deal(&game->deck);    /* player 1 first card */
+        play_effect_woosh();
         add_card(&game->player1.hand, &dealt_card);
         return;
         }
 
         if (game->dealer.hand.value == 0) {
         dealt_card = deal(&game->deck);
+        play_effect_woosh();
         add_card(&game->dealer.hand, &dealt_card); /*dealer first card */
         return;
         }
 
         if (game->player1.hand.num_of_cards == 1) {
         dealt_card = deal(&game->deck); /*player 1 second card */
+        play_effect_woosh();
         add_card(&game->player1.hand, &dealt_card);
         return;
         }
