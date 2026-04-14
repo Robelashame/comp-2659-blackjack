@@ -22,11 +22,15 @@ void increase_bet(Model *model) {
     {
         if (model->player1.total_bet + 50 <= model->player1.bank)
             model->player1.total_bet += 50;
+        else if (model->player1.total_bet + 50 > model->player1.bank)
+            model->player1.total_bet = model->player1.bank;
     }
     else if (model->player2_bet)
     {
         if (model->player2.total_bet + 50 <= model->player2.bank)
             model->player2.total_bet += 50;
+        else if (model->player2.total_bet + 50 > model->player2.bank)
+            model->player2.total_bet = model->player2.bank;
     }
 }
 
@@ -35,11 +39,15 @@ void decrease_bet(Model *model) {
     {
         if (model->player1.total_bet - 50 >= 0)
             model->player1.total_bet -= 50;
+        else if (model->player1.total_bet - 50 < 0)
+            model->player1.total_bet = 0;
     }
     else if (model->player2_bet)
     {
         if (model->player2.total_bet - 50 >= 0)
             model->player2.total_bet -= 50;
+        else if (model->player2.total_bet - 50 < 0)
+            model->player2.total_bet = 0;
     }
 }
 
@@ -60,4 +68,3 @@ void bet_confirmed(Model *model) {
 void quit(Model *game) {
     game->is_game_over = TRUE;
 }
-
