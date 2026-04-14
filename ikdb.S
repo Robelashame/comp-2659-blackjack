@@ -1,12 +1,28 @@
-    xref _input_ikbd_handler
-    xdef _input_ikbd_isr
+    xref _ikbd_handler
+    xdef _ikbd_isr
 
-_input_ikbd_isr:
+_ikbd_isr:
 
+    movem.l d0-d2/a0,-(sp)
 
-        movem.l d0-d7/a0-a6,-(sp)
-        jsr _input_ikbd_handler
+    ; check status register
+    move.b  $FFFC00,d0
+    andi.b  #1,d0
+    beq     exit_isr
 
-        movem.l (sp)+,d0-d7/a0-a6
-        bclr #6,$fffffa11.w
-        rte
+    ; read byte
+    move.b  $FFFC02,d0
+
+    ; call C handler
+    move.b  d0,-(sp)
+    jsr     _ikbd_handler
+    addq.l  #2,sp
+
+exit_isr:
+
+    ; clear MFP interrupt
+    bclr    #6,$FFFA11
+
+    movem.l (sp)+,d0-d2/a0
+
+    rte

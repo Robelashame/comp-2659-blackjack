@@ -52,8 +52,12 @@ void update_mouse(MouseState *state);
 
  OUTPUT: None
 */
-void input_mouse_init(void); 
-void input_mouse_shutdown(void);
-void input_mouse_on_ikbd_byte(UINT8 b);
+void ikbd_init(void);
+void ikbd_enable_mouse(void);
+void ikbd_disable_mouse(void);
+
+extern volatile int mouse_x;
+extern volatile int mouse_y;
+extern volatile int mouse_buttons;
 
 #endif

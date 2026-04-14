@@ -27,7 +27,7 @@ int splash_screen()
 
     base = (UINT8 *)Physbase();
 
-    input_mouse_init();
+    ikbd_init();
     draw_splash_screen(base);
 
     timethen = get_time();
@@ -41,7 +41,8 @@ int splash_screen()
         timeElapsed = timenow - timethen;
         
         update_mouse(&ms);
-        draw_mouse_debug(base, &ms);
+        plot_rectangle(base, ms.y, ms.x, 10, 10);
+        /*draw_mouse_debug(base, &ms);*/
 
         if (has_input()) 
         {
@@ -50,17 +51,14 @@ int splash_screen()
 
             if (input == KEY_ONE) 
             {
-                input_mouse_shutdown();
                 return 0; /* single player mode */
             }
             else if (input == KEY_TWO)
             {
-                input_mouse_shutdown();
                 return 1; /* two player mode */
             }
             else if (input == KEY_Q)
             {
-                input_mouse_shutdown();
                 return 2; /* quit */
             }
         }

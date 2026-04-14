@@ -12,7 +12,7 @@ SRCS = asynch.c bmaps.c card.c cond.c dealer.c deck.c font.c \
 # Object files
 OBJS = asynch.o bmaps.o card.o cond.o dealer.o deck.o font.o \
        game.o hand.o handle.o input.o model.o player.o \
-       raster.o render.o synch.o time.o timer.o splash.o psg.o music.o effects.o
+       raster.o render.o synch.o time.o timer.o splash.o psg.o music.o effects.o ikdb.o
 
 # Output
 TARGET = game.prg
