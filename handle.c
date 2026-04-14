@@ -60,6 +60,8 @@ void handle_input(Model *game, char cin, int in_prog)
         }
         else if (cin == 'c')
         {
+            if (game->player1.total_bet == 0)
+                return;
             bet_confirmed(game);
             startup_timer(game);
         }
