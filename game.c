@@ -58,6 +58,7 @@ int main() {
 
     timethen = get_time();
 
+    start_music();
     game->is_game_over = FALSE;
 
     while (!game->is_game_over)

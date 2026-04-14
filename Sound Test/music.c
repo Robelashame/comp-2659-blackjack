@@ -1,0 +1,143 @@
+#include "types.h"
+#include <stdlib.h>
+#include <osbind.h>
+#include "music.h"
+
+typedef struct
+{
+    UINT16 tone;
+    UINT16 duration;
+} Note;
+
+
+const Note song[] =
+{
+    {0x140,20},{0x0FE,20},{0x0E2,20},
+    {0x140,40},{0x0FE,20},{0x0E2,20},
+    {0x140,40},{0x0FE,20},{0x0E2,20},
+    {0x0AA,40},{0x0BE,20},
+   
+    
+    {0x0E2,20},{0x0D6,20},{0x0E2,40},{0x11D,20},{0x153,20},
+    {0x17D,40},{0x153,20},{0x11D,20},
+    
+   
+    {0x153,20},
+    {0x000,30},{0x0FE,30},{0x0E2,40},
+
+  
+    {0x0AA,20},{0x0BE,20},
+    {0x0D6,20},{0x0AA,20},
+    {0x140,20},{0x0FE,20},{0x0E2,40},
+
+   
+    {0x0E2,20},{0x11D,20},{0x17D,20},{0x153,40},
+
+  
+    {0x0D6,40},
+    {0x153,20},{0x140,20},{0x11D,20},{0x0FE,20},{0x0E2,40},
+
+  
+    {0x0D6,20},{0x0BE,20},{0x0AA,20},
+    {0x140,20},{0x11D,20},{0x0FE,20},
+    {0x0E2,20},{0x0FE,20},{0x0E2,40},
+
+ 
+    {0x17D,20},{0x153,20},{0x140,20},
+    {0x11D,20},{0x0FE,20},{0x0E2,40},
+
+
+    {0x0D6,40},
+    {0x0E2,20},{0x153,40},{0x140,20},{0x153,20},{0x0FE,20},{0x11D,20},{0x0E2,40},
+
+    {0x0D6,20},{0x0BE,20},{0x0D6,20},
+    {0x0D6,20},{0x0BE,20},{0x0AA,20},{0x0BE,20},
+    {0x0E2,20},{0x0FE,20},{0x0E2,20},
+
+    
+    {0x0AA,40},{0x071,40},
+
+   
+    {0x0AA,40},
+    {0x140,20},{0x0FE,20},{0x0E2,40},
+
+  
+    {0x0BE,20},{0x0D6,40},
+    {0x0E2,20},{0x11D,20},{0x153,40},
+
+
+    {0x11D,20},{0x153,40},
+    {0x140,20},{0x0FE,20},{0x0E2,40},
+
+
+    {0x0AA,20},{0x0BE,20},
+    {0x0D6,20},{0x0AA,20},
+    {0x140,20},{0x0FE,20},{0x0E2,40},
+
+    {0x0E2,20},{0x11D,20},{0x17D,20},{0x153,40},
+
+
+    {0x0D6,40},
+    {0x153,20},{0x140,20},{0x11D,20},{0x0FE,20},{0x0E2,40},
+
+
+    {0x0D6,20},{0x0BE,20},{0x0AA,20},
+    {0x140,20},{0x11D,20},{0x0FE,20},
+    {0x0E2,20},{0x0FE,20},{0x0E2,40},
+
+
+    {0x0AA,40},{0x08F,40},
+    {0x17D,20},{0x153,20},{0x140,20},
+    {0x11D,20},{0x0FE,20},{0x0E2,40},
+
+
+    {0x0D6,40},
+    {0x0E2,20},{0x153,40},{0x140,20},{0x153,20},{0x0FE,20},{0x11D,20},{0x0E2,40},
+
+
+    {0x0AA,40},{0x071,40},
+
+    {0,40}
+};
+
+static UINT32 last_time = 0;
+static int current_note = 0;
+
+void start_music()
+{
+    int current_note = 0;
+    UINT32 last_time = 0;
+
+    set_volume(8, 10);
+    enable_channel(0, 1, 0);
+}
+
+void update_music(UINT32 time_elapsed)
+{
+    if(time_elapsed - last_time >= song[current_note].duration)
+    {
+        UINT16 tone = song[current_note].tone;
+
+        if(tone == 0)
+        {
+            set_volume(8, 0);
+        }
+        else
+        {
+            set_tone(0, tone & 0xFF);
+            set_tone(1, tone >> 8);
+            set_volume(8, 10);
+        }
+
+        last_time = time_elapsed;
+
+        current_note++;
+
+        if(current_note >= 21)
+        {
+            current_note = 0;
+        }
+    }
+}
+
+
