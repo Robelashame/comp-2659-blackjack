@@ -29,7 +29,6 @@ int main() {
     Model *game;
 
     Cconws("\033f");
-    vbl_init();
 
     in_prog = 0;
     game = &model;
