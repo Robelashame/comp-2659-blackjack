@@ -37,7 +37,6 @@ int main() {
 
     if (choice == 2)
     {
-        vbl_shutdown();
         return 0; /* quit game */
     }
 
@@ -80,7 +79,6 @@ int main() {
     ending_screen();
     Cnecin();
     clear_buffer();
-    vbl_shutdown();
     return 0;
 }
 
