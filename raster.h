@@ -193,4 +193,9 @@ void plot_character(UINT8 *base, int row, int col, char ch);
 */
 void plot_string(UINT8 *base, int row, int col, char *ch);
 
+
+UINT16 *get_video_base();
+
+void set_video_base(UINT16 *base);
+
 #endif
