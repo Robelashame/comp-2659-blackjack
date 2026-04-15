@@ -9,7 +9,7 @@
 #include "input.h"
 #include "TYPES.H"
 #include "handle.h"
-#include "time.h"
+#include "vbl.h"
 
 
 
@@ -34,14 +34,11 @@ static void set_video_base_safe(UINT16 *base);
 static UINT16 *get_video_base_safe(void);
 
 int main() {
-    UINT32 timenow, timethen, timeElapsed;
     int in_prog;
     char key;
-    int action;
     Model *game;
-    
+
     in_prog = 0;
-    timethen = get_time();
 
     game = &model;
 
@@ -51,12 +48,10 @@ int main() {
     /*Draws first frame*/
     clear_screen(back_buffer);
     render(game, back_buffer);
-    timenow = get_time();
     set_video_base_safe((UINT16 *)back_buffer);
-    wait_vbl(timenow);
     swap_buffer();
 
-    timethen = get_time();
+    vbl_init();
 
     game->is_game_over = FALSE;
 
@@ -68,23 +63,18 @@ int main() {
             handle_input(game, key, in_prog);
         }
 
-        timenow = get_time();
-        timeElapsed = timenow - timethen;
-
-        if (timeElapsed > 0)
+        if (vbl_consume_render_request())
         {
             update_model(game, &in_prog);
             clear_screen(back_buffer);
             prompts(game, back_buffer);
             render(game, back_buffer);
             set_video_base_safe((UINT16 *)back_buffer);
-            wait_vbl(timenow);
             swap_buffer();
-
-            timethen = timenow;
         }
     }
 
+    vbl_shutdown();
     restore_screen();
     clear_buffer();
     return 0;
@@ -151,6 +141,7 @@ static void test_swap() {
     Cnecin();
 
     /* restore original TOS screen before exit */
+    vbl_shutdown();
     restore_screen();
 }
 
