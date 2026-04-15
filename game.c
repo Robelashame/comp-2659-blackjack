@@ -15,6 +15,7 @@
 #include "effects.h"
 #include "double.h"
 #include <stdio.h>
+#include "vbl.h"
 
 Model model;
 RenderSnapshot front_snapshot;
@@ -31,6 +32,7 @@ int main() {
     Model *game;
 
     Cconws("\033f");
+    vbl_init();
 
     timethen = get_time();
     in_prog = 0;
@@ -40,6 +42,7 @@ int main() {
 
     if (choice == 2)
     {
+        vbl_shutdown();
         return 0; /* quit game */
     }
 
@@ -52,7 +55,7 @@ int main() {
     draw_full_frame(game, get_back_buffer(), &back_snapshot);
 
     timenow = get_time();
-    Setscreen(-1, get_back_buffer(), -1);
+    set_video_base((UINT16 *)get_back_buffer());
     wait_vbl(timenow);
     swap_buffer();
 
@@ -77,7 +80,7 @@ int main() {
             update_model(game, &in_prog);
             render_min(game, &back_snapshot, get_back_buffer());
 
-            Setscreen(-1, get_back_buffer(), -1);
+            set_video_base((UINT16 *)get_back_buffer());
             wait_vbl(timenow);
             swap_buffer();
             swap_snapshots();
@@ -90,6 +93,7 @@ int main() {
     ending_screen();
     Cnecin();
     clear_buffer();
+    vbl_shutdown();
     return 0;
 }
 
