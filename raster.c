@@ -1,6 +1,7 @@
 #include "raster.h"
 #include "types.h"
 #include "font.h"
+#include <osbind.h>
 #include <stdlib.h>
 
 #define SCREEN_BYTES 32000
@@ -440,11 +441,23 @@ static void clear_horizontal_line(UINT32 *base, int row, int col, UINT16 length)
 UINT16 *get_video_base() {
     volatile unsigned char *high = (volatile unsigned char *)0xFF8201;
     volatile unsigned char *mid  = (volatile unsigned char *)0xFF8203;
-
+    long old_ssp;
     unsigned long address;
 
+    old_ssp = Super(0);
     address = ((unsigned long)(*high) << 16) |
               ((unsigned long)(*mid)  << 8);
+    Super(old_ssp);
 
     return (UINT16 *)address;
+}
+
+extern void set_video_base_asm(UINT16 *base);
+
+void set_video_base(UINT16 *base) {
+    long old_ssp;
+
+    old_ssp = Super(0);
+    set_video_base_asm(base);
+    Super(old_ssp);
 }
