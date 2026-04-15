@@ -7,10 +7,9 @@ static void (*old_vbl_vector)(void) = 0;
 static volatile UINT32 vbl_ticks = 0;
 static volatile UINT8 render_request = 0;
 
-extern void vbl_isr(void);
+extern void vbl_isr();
 
-void vbl_init(void)
-{
+void vbl_init() {
     long old_ssp;
 
     old_ssp = Super(0);
@@ -21,8 +20,7 @@ void vbl_init(void)
     Super(old_ssp);
 }
 
-void vbl_shutdown(void)
-{
+void vbl_shutdown() {
     long old_ssp;
 
     old_ssp = Super(0);
@@ -33,14 +31,12 @@ void vbl_shutdown(void)
     Super(old_ssp);
 }
 
-void vbl_tick(void)
-{
+void vbl_tick() {
     vbl_ticks++;
     render_request = 1;
 }
 
-int vbl_consume_render_request(void)
-{
+int vbl_consume_render_request() {
     int requested;
 
     requested = (int)render_request;
@@ -49,7 +45,6 @@ int vbl_consume_render_request(void)
     return requested;
 }
 
-UINT32 vbl_get_ticks(void)
-{
+UINT32 vbl_get_ticks() {
     return vbl_ticks;
 }
