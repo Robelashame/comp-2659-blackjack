@@ -12,7 +12,7 @@ _set_video_base:
 	move.l	BASE(a6),d0
 	lsr.l #8,d0
 	lea	$FF8201,a0
-	movep.w d0,(a0)
+	movep.w d0,0(a0)
 	movem.l	(sp)+,d0-d2/a0-a2
 	unlk	a6
 	rts
