@@ -451,13 +451,3 @@ UINT16 *get_video_base() {
 
     return (UINT16 *)address;
 }
-
-extern void set_video_base_asm(UINT16 *base);
-
-void set_video_base(UINT16 *base) {
-    long old_ssp;
-
-    old_ssp = Super(0);
-    set_video_base_asm(base);
-    Super(old_ssp);
-}
