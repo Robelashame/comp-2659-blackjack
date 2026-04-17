@@ -13,7 +13,7 @@ static UINT8 *raw_buffer2 = 0;
 void init_buffer() {
     if (original_screen == 0) 
     {
-        original_screen = (UINT8 *)Physbase();
+        original_screen = (UINT8 *)get_video_base();
         
         raw_buffer1 = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
         raw_buffer2 = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));

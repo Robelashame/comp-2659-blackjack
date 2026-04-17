@@ -24,7 +24,7 @@ int splash_screen()
     choice = 0;
     running = 1;
 
-    base = (UINT8 *)Physbase();
+    base = (UINT8 *)get_video_base();
 
     draw_splash_screen(base);
 
@@ -89,7 +89,7 @@ void ending_screen()
     UINT8 *base;
     int x;
 
-    base = (UINT8 *)Physbase();
+    base = (UINT8 *)get_video_base();
 
     clear_screen((UINT32 *)base);
     x = (SCREEN_WIDTH / 2) - (39 * 8) / 2;
