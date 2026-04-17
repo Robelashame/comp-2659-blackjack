@@ -13,7 +13,7 @@ static UINT8 *raw_buffer2 = 0;
 void init_buffer() {
     if (original_screen == 0) 
     {
-        original_screen = (UINT8 *)get_video_base();
+        original_screen = (UINT8 *)Physbase();
         
         raw_buffer1 = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
         raw_buffer2 = (UINT8 *)malloc(SCREEN_SIZE + (ALIGNMENT - 1));
@@ -59,17 +59,17 @@ void test_swap() {
     plot_string(back_buffer, 100, 140, "BACK BUFFER");
 
     /* start on original visible screen */
-    set_video_base((UINT16 *)front_buffer);
+    Setscreen(-1, front_buffer, -1);
     Cnecin();
 
     /* flip to back buffer */
     swap_buffer();
-    set_video_base((UINT16 *)front_buffer);
+    Setscreen(-1, front_buffer, -1);
     Cnecin();
 
     /* flip back to the other buffer */
     swap_buffer();
-    set_video_base((UINT16 *)front_buffer);
+    Setscreen(-1, front_buffer, -1);
     Cnecin();
 
     /* restore original TOS screen before exit */
@@ -77,7 +77,7 @@ void test_swap() {
 }
 
 void restore_screen() {
-    set_video_base((UINT16 *)original_screen);
+    Setscreen(-1, original_screen, -1);
 }
 
 UINT8 *get_front_buffer() {

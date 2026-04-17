@@ -48,7 +48,7 @@ int main() {
     draw_full_frame(game, get_front_buffer(), &front_snapshot);
     draw_full_frame(game, get_back_buffer(), &back_snapshot);
 
-    set_video_base((UINT16 *)get_back_buffer());
+    Setscreen(-1, get_back_buffer(), -1);
     swap_buffer();
 
     vbl_init();
@@ -68,7 +68,7 @@ int main() {
             update_model(game, &in_prog);
             render_min(game, &back_snapshot, get_back_buffer());
 
-            set_video_base((UINT16 *)get_back_buffer());
+            Setscreen(-1, get_back_buffer(), -1);
             swap_buffer();
             swap_snapshots();
             update_music(vbl_get_ticks());
