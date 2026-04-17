@@ -205,6 +205,16 @@ void plot_rectangle(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
     plot_horizontal_line(base, row + length - 1, col, width);
 }
 
+void plot_filled_rect(UINT32 *base, int row, int col, UINT16 length, UINT16 width)
+{
+    int i;
+
+    for(i = 0; i < length; i++)
+    {
+        plot_horizontal_line(base, row + i, col, width);
+    }
+}
+
 void plot_square(UINT32 *base, int row, int col, UINT16 side)
 {
     plot_rectangle(base, row, col, side, side);

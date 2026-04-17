@@ -20,10 +20,10 @@ Vector install_vector(int num, Vector vector);
 
 void ikbd_isr(void);
 
+Vector orig_ikbd;
+
 void ikbd_init()
 {
-    Vector orig_ikbd;
-
     orig_ikbd = install_vector(IKBD_VECTOR, ikbd_isr);
 }
 
@@ -32,9 +32,12 @@ void ikbd_handler(unsigned char data)
     switch(mouse_state)
     {
         case 0:
-            mouse_left  = (data & 0x02) != 0;
-            mouse_right = (data & 0x01) != 0;
-            mouse_state = 1;
+            if((data & 0xF8) == 0xF8)
+            {
+                mouse_left  = (data & 0x02) != 0;
+                mouse_right = (data & 0x01) != 0;
+                mouse_state = 1;
+            }
             break;
 
         case 1:
@@ -45,8 +48,8 @@ void ikbd_handler(unsigned char data)
         case 2:
             mouse_dy = (signed char)data;
 
-            mouse_x += mouse_dx;
-            mouse_y -= mouse_dy;
+            mouse_x += (int)mouse_dx;
+            mouse_y += (int)mouse_dy;
 
             mouse_x = clamp(mouse_x, 0, 639);
             mouse_y = clamp(mouse_y, 0, 419);
@@ -97,9 +100,11 @@ void update_mouse(MouseState *mouse)
 
     if (!mouse) return;
 
+    /*long old_sr = bit_and_set_ipl(7); */
+
     x = mouse_x;
     y = mouse_y;
-    b = mouse_left;
+    b = (mouse_left << 0) | (mouse_right << 1);
 
     mouse->x = x;
     mouse->y = y;
@@ -113,4 +118,11 @@ void update_mouse(MouseState *mouse)
     s_prev_x = x;
     s_prev_y = y;
     */
+
+    /*restore_sr(old_sr);*/
+}
+
+void ikbd_uninstall()
+{
+    install_vector(IKBD_VECTOR, orig_ikbd);
 }

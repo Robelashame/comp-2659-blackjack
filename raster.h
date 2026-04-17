@@ -95,6 +95,7 @@ void plot_line(UINT32 *base, int start_row, int start_col, int end_row, int end_
 */
 void plot_rectangle(UINT32 *base, int row, int col, UINT16 length, UINT16 width);
 
+void plot_filled_rect(UINT32 *base, int row, int col, UINT16 height, UINT16 width);
 
 /*----- Function: plot_square -----
 
