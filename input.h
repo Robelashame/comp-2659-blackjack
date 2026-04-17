@@ -53,8 +53,7 @@ void update_mouse(MouseState *state);
  OUTPUT: None
 */
 void ikbd_init(void);
-void ikbd_enable_mouse(void);
-void ikbd_disable_mouse(void);
+void ikbd_uninstall(void);
 
 extern volatile int mouse_x;
 extern volatile int mouse_y;

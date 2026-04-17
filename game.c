@@ -30,17 +30,33 @@ static UINT8 *back_buffer = 0;
 static UINT8 *raw_buffer1 = 0;
 static UINT8 *raw_buffer2 = 0;
 
+#define CURSOR_W 3
+#define CURSOR_H 10
+
+static UINT8 cursor_save[CURSOR_W * CURSOR_H];
+
 static void init_buffer();
 static void swap_buffer();
 static void clear_buffer();
 static void test_swap();
 static void restore_screen();
 
+static int point_in_rect_local(int x, int y, int rect_x, int rect_y, int w, int h);
+static char map_mouse_to_key(const Model *game, int mouse_x_pos, int mouse_y_pos);
+static void render_mouse_controls(const Model *game, UINT8 *buffer);
+
+static int prev_x = -1;
+static int prev_y = -1;
+
+#define LEFT_BUTTON 1
+
 int main() {
     UINT32 timenow, timethen, timeElapsed;
     int in_prog, choice;
     char key;
     int action;
+    MouseState mouse;
+    int prev_buttons;
     Model *game;
 
     Cconws("\033f");
@@ -57,7 +73,10 @@ int main() {
     }
 
     initialize_game(game, choice);
+    ikbd_init();
+    initialize_game(game, choice);
     init_buffer();
+    prev_buttons = 0;
 
     /*Draws first frame*/
 
@@ -76,6 +95,18 @@ int main() {
 
     while (!game->is_game_over)
     {
+        update_mouse(&mouse);
+
+        if ((prev_buttons & LEFT_BUTTON) && !(mouse.buttons & LEFT_BUTTON))
+        {
+            key = map_mouse_to_key(game, mouse.x, mouse.y);
+            if (key != 0)
+            {
+                handle_input(game, key, in_prog);
+            }
+        }
+        prev_buttons = mouse.buttons;
+
         if (has_input())
         {
             key = get_input();
@@ -94,6 +125,17 @@ int main() {
             } else {
                 render_min(game, &back_snapshot, back_buffer);
             }
+            if(prev_x != mouse.y || prev_y != mouse.x)
+            {
+                restore_cursor(back_buffer);
+
+                save_cursor(back_buffer, mouse.y, mouse.x);
+
+                plot_square(back_buffer, mouse.y, mouse.x, 10);
+            }
+            prev_x = mouse.y;
+            prev_y = mouse.x;
+            render_mouse_controls(game, back_buffer);
 
             Setscreen(-1, back_buffer, -1);
             wait_vbl(timenow);
@@ -104,6 +146,7 @@ int main() {
             timethen = timenow;
         }
     }
+    ikbd_uninstall();
     restore_screen();
     clear_buffer();
     return 0;
@@ -113,6 +156,7 @@ static void draw_full_frame(const Model *game, UINT8 *buffer, RenderSnapshot *sn
     clear_screen(buffer);
     render(game, buffer);
     prompts(game, buffer);
+    render_mouse_controls(game, buffer);
     create_snapshot(game, snap);
 }
 
@@ -192,4 +236,110 @@ static void test_swap() {
 
 static void restore_screen() {
     Setscreen(-1, original_screen, -1);
+}
+
+static int point_in_rect_local(int x, int y, int rect_x, int rect_y, int w, int h)
+{
+    return (x >= rect_x && x < (rect_x + w) && y >= rect_y && y < (rect_y + h));
+}
+
+static char map_mouse_to_key(const Model *game, int mouse_x_pos, int mouse_y_pos)
+{
+    if (game->is_round_over)
+    {
+        if (point_in_rect_local(mouse_x_pos, mouse_y_pos, 20, 330, 180, 20))
+            return 'c';
+        if (point_in_rect_local(mouse_x_pos, mouse_y_pos, 220, 330, 140, 20))
+            return 'q';
+        return 0;
+    }
+
+    if (game->player1_turn || game->player2_turn)
+    {
+        if (point_in_rect_local(mouse_x_pos, mouse_y_pos, 20, 330, 180, 20))
+            return 'h';
+        if (point_in_rect_local(mouse_x_pos, mouse_y_pos, 220, 330, 180, 20))
+            return 's';
+        return 0;
+    }
+
+    if (!(game->dealer_turn || game->player1_turn || game->player2_turn))
+    {
+        if (point_in_rect_local(mouse_x_pos, mouse_y_pos, 20, 330, 180, 20))
+            return 'w';
+        if (point_in_rect_local(mouse_x_pos, mouse_y_pos, 220, 330, 180, 20))
+            return 's';
+        if (point_in_rect_local(mouse_x_pos, mouse_y_pos, 420, 330, 180, 20))
+            return 'c';
+        return 0;
+    }
+
+    if (point_in_rect_local(mouse_x_pos, mouse_y_pos, 220, 330, 140, 20))
+        return 'q';
+
+    return 0;
+}
+
+static void render_mouse_controls(const Model *game, UINT8 *buffer)
+{
+
+    if (game->is_round_over)
+    {
+        plot_rectangle(buffer, 330, 20, 20, 180);
+        plot_string(buffer, 336, 56, "Play Again");
+        plot_rectangle(buffer, 330, 420, 20, 180);
+        plot_string(buffer, 336, 456, "Quit");
+    }
+    else if (game->player1_turn || game->player2_turn)
+    {
+        plot_rectangle(buffer, 330, 20, 20, 180);
+        plot_string(buffer, 336, 86, "Hit");
+        plot_rectangle(buffer, 330, 420, 20, 180);
+        plot_string(buffer, 336, 456, "Stand");
+    }
+    else if (!(game->dealer_turn || game->player1_turn || game->player2_turn))
+    {
+        plot_rectangle(buffer, 330, 20, 20, 180);
+        plot_string(buffer, 336, 34, "Increase Bet");
+        plot_rectangle(buffer, 330, 220, 20, 180);
+        plot_string(buffer, 336, 234, "Decrease Bet");
+        plot_rectangle(buffer, 330, 420, 20, 180);
+        plot_string(buffer, 336, 456, "Confirm Bet");
+    }
+}
+
+void save_cursor(UINT8 *base, int x, int y)
+{
+    int row;
+    UINT8 *src;
+
+    src = base + (x * 80) + (y >> 3);
+
+    for(row = 0; row < CURSOR_H; row++)
+    {
+        cursor_save[row * CURSOR_W] = src[0];
+        cursor_save[row * CURSOR_W + 1] = src[1];
+        cursor_save[row * CURSOR_W + 2] = src[2];
+
+        src += 80;
+    }
+}
+
+void restore_cursor(UINT8 *base)
+{
+    int row;
+    UINT8 *dst;
+
+    if(prev_x < 0) return;
+
+    dst = base + (prev_x * 80) + (prev_y >> 3);
+
+    for(row = 0; row < CURSOR_H; row++)
+    {
+        dst[0] = cursor_save[row * CURSOR_W];
+        dst[1] = cursor_save[row * CURSOR_W + 1];
+        dst[2] = cursor_save[row * CURSOR_W + 2];
+
+        dst += 80;
+    }
 }
